@@ -12,7 +12,7 @@ Microcontroller being simulated:SCT89C52
 Team Members: Venkateshwara U D - 25190152
               Zainaba Fidha K N - 25190155
               Yathiksha U S - 25190153
-              Raaif Abdul Haamid - 2519015
+              Raaif Abdul Haamid - 25190140
 
 Team responsibilities:
 Venkateshwara U D : CPU and instruction execution
