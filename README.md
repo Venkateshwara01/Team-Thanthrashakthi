@@ -57,7 +57,7 @@ timers in the real chip; this project models a reduced subset: Timer0 only, as s
 
 ## Initial System Architecture
 
-![Initial System Architecture](docs/images/initial-system-architecture.png)
+![Initial System Architecture](mermaid-diagram.png)
 
 - **CPU**: registers, flags, PC, instruction execution engine, instruction lookup/dispatch table
 - **Memory**: data memory (internal RAM model) + call/push stack per process
