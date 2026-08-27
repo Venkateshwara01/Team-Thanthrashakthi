@@ -19,4 +19,9 @@ Zainaba Fidha K N : Memory and stack
 Yathiksha U S : Data structures(DSA)
 Raaif Abdul Haamid : User intertface and context switching
 
-Selected program
+Selected programming language: JAVA
+
+Initial system architecture:
+
+Initial development plan:
+
