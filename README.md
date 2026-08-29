@@ -21,37 +21,24 @@ Raaif Abdul Haamid : User intertface and context switching
 
 ## Selected programming language: JAVA
 
-## Initial system architecture:
-mermaid
-flowchart TD
+## Initial System Architecture
 
-    A["EDUCATIONAL MICROCONTROLLER SIMULATOR"]
-
-    A --> PM["PROCESS MANAGEMENT"]
-    A --> CPU["CPU"]
-    A --> MEM["MEMORY"]
-    A --> PER["PERIPHERALS"]
-
-    PM --> PCB["PCB"]
-    PCB --> RQ["Ready Queue"]
-    RQ --> SCH["Scheduler"]
-    SCH -->|Select Process| CPU
-
-    CPU --> PC["Program Counter"]
-    PC --> ID["Instruction Decoder"]
-    ID --> ALU["ALU"]
-    ALU --> REG["Registers"]
-
-    MEM --> PMEM["Program Memory"]
-    MEM --> DMEM["Data Memory"]
-    MEM --> ST["Stack"]
-
-    PER --> GPIO["GPIO"]
-    PER --> TIMER["Timer"]
-    PER --> INT["Interrupts"]
-
-    CPU --> MEM
-    CPU --> PER
+```mermaid
+graph TD
+    A[Microcontroller Simulator<br/>PIC16F72] --> B[CPU]
+    A --> C[Memory]
+    A --> D[Peripherals<br/>GPIO / Timer / Interrupt]
+    B --> E[Process Management]
+    C --> E
+    D --> E
+    E --> F[Scheduler<br/>FCFS / Round Robin / Priority]
+    F --> G[FCFS]
+    F --> H[Round Robin]
+    F --> I[Priority]
+    G --> J[User Interface & Results]
+    H --> J
+    I --> J
+```
 
 ## Initial development plan:
 
