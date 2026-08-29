@@ -14,10 +14,10 @@
               Raaif Abdul Haamid - 25190140
 
 ## Team responsibilities:
-Venkateshwara U D : CPU and instruction execution
-Zainaba Fidha K N : Memory and stack
-Yathiksha U S : Data structures(DSA)
-Raaif Abdul Haamid : User intertface and context switching
+- Venkateshwara U D : CPU and instruction execution
+- Zainaba Fidha K N : Memory and stack
+- Yathiksha U S : Data structures(DSA)
+- Raaif Abdul Haamid : User intertface and context switching
 
 ## Selected programming language: JAVA
 
@@ -85,7 +85,7 @@ graph TD
 - Perform unit and system testing.
 - Fix errors and improve performance.
 ## Week 12 – Finalization
-Complete documentation and README.
-Prepare demonstrations and test cases.
-Finalize the project and presentation.
+- Complete documentation and README.
+- Prepare demonstrations and test cases.
+- Finalize the project and presentation.
 
