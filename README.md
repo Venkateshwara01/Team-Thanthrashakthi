@@ -4,7 +4,16 @@
 
 ## Problem Statement: Design and implement a Java-based simulator for the STC89C52 8-bit microcontroller that models instruction execution, memory ,stack, GPIO , timer,and interrupts .The simulator will also manage multiple processes using PCB,queues,context switching,and FCFS, round robin,and Priority scheduling algorithms.
 
-## Project scope: The project covers CPU simulation, registers, memory ,stack, peripherals , process management , PCB, ready queue , scheduling , and context switching.
+## Project scope: 
+- CPU & Instructions – Simulate CPU registers, flags, PC, and instruction execution.
+- Memory & Stack – Manage program memory, data memory, and stack operations.
+- Peripherals – Simulate GPIO, timer, and interrupts.
+- Process Management – Manage multiple programs using PCB and process states.
+- Data Structures – Use stack, queue, circular queue, and instruction lookup table.
+- Scheduling – Implement FCFS, Round Robin, and Priority scheduling.
+- Context Switching – Switch between processes and save their states.
+- User Interface – Support program loading, run, reset, and single-step execution.
+- Performance Analysis – Measure waiting time, turnaround time, response time, context switches, and CPU utilization.
 
 ## Microcontroller being simulated:SCT89C52
 
