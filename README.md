@@ -41,50 +41,50 @@ graph TD
 ```
 
 ## Initial development plan:
-Week 1 – Project Setup
+## Week 1 – Project Setup
 Finalize project requirements and architecture.
 Set up Java project and GitHub repository.
 Define team responsibilities.
-Week 2 – CPU & Registers
+## Week 2 – CPU & Registers
 Implement STC89C52 CPU structure.
 Implement registers, PC, flags, and instruction cycle.
-Week 3 – Instruction Execution
+## Week 3 – Instruction Execution
 Implement the required instruction subset.
 Implement instruction lookup and execution.
 Test CPU operations.
-Week 4 – Memory & Stack
+## Week 4 – Memory & Stack
 Implement program memory and data memory.
 Implement stack and stack operations.
 Test memory access and stack handling.
-Week 5 – Peripherals
+## Week 5 – Peripherals
 Implement GPIO operations.
 Implement timer functionality.
 Implement basic interrupt handling.
-Week 6 – Process Management
+## Week 6 – Process Management
 Implement processes and PCB.
 Implement process states.
 Implement ready queue and required data structures.
-Week 7 – CPU Scheduling
+## Week 7 – CPU Scheduling
 Implement FCFS scheduling.
 Implement Round Robin scheduling.
 Implement Priority scheduling.
-Week 8 – Context Switching
+## Week 8 – Context Switching
 Implement context switching.
 Connect process management with CPU scheduling.
 Test multiple processes.
-Week 9 – User Interface
+## Week 9 – User Interface
 Develop the simulator interface.
 Add program loading, run, reset, and single-step features.
 Display CPU, memory, and process states.
-Week 10 – Performance Analysis
+## Week 10 – Performance Analysis
 Calculate waiting time.
 Calculate turnaround time and response time.
 Measure context switches and CPU utilization.
-Week 11 – Integration & Testing
+## Week 11 – Integration & Testing
 Integrate all modules.
 Perform unit and system testing.
 Fix errors and improve performance.
-Week 12 – Finalization
+## Week 12 – Finalization
 Complete documentation and README.
 Prepare demonstrations and test cases.
 Finalize the project and presentation.
