@@ -34,7 +34,7 @@
 
 ```mermaid
 graph TD
-    A[Microcontroller Simulator<br/>PIC16F72] --> B[CPU]
+    A[Microcontroller Simulator<br/>STC89C52] --> B[CPU]
     A --> C[Memory]
     A --> D[Peripherals<br/>GPIO / Timer / Interrupt]
     B --> E[Process Management]
