@@ -1,0 +1,30 @@
+# CPU & Instruction Execution - STC89C52 Simulator
+
+## Overview
+This module focuses on the **CPU and instruction execution** part of the Educational STC89C52 Simulator. The main purpose is to simulate how the  CPU fetches, decodes and executes instruction and how the CPU registers change during execution
+
+##Objective
+The objective is to model the important CPU components of the STC89C52/8051 architecture and provide a visual representation of the instruction execution
+
+## CPU Components
+The CPU module includes:
+-**Accumulator (A)**- main register used for arithmetic and logic operations.
+-**B Register**- mainly used with multiplication and division operations.
+-**R0-R7**- general purpose registers
+-**Program Counter (PC)**- keeps track of the program instruction location.
+-**Stack Pointer (SP)** - Points to the current stack location.
+-**Data Pointer (DPTR)** - used for data/address operations.
+-**PSW/ FLAGS** - stores processor status information.
+-**ALU** - performs arithmetic and logical operations
+-**Instruction Decoder**-identifies the operation represented by an instruction.
+
+## Instruction Execution
+The simulator follows a simplified educational execution flow:
+
+FETCH
+  ↓
+DECODE
+  ↓
+EXECUTE
+  ↓
+UPDATE
