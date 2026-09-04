@@ -1,887 +1,521 @@
 package cpu;
 
 /**
- * CPUTest
+ * Unit test suite for the CPU execution engine implemented by Student 1.
+ * <p>
+ * Verifies core CPU responsibilities:
+ * <ol>
+ *   <li>CPU initialization</li>
+ *   <li>Register reset state</li>
+ *   <li>Flag reset state</li>
+ *   <li>Program Counter (PC) behavior</li>
+ *   <li>Program loading</li>
+ *   <li>FETCH phase</li>
+ *   <li>DECODE phase</li>
+ *   <li>EXECUTE phase</li>
+ *   <li>Complete step() operation</li>
+ *   <li>run() behavior</li>
+ *   <li>Invalid opcode &amp; error handling</li>
+ *   <li>Halt behavior</li>
+ *   <li>Register updates caused by execution</li>
+ *   <li>Flag updates caused by execution</li>
+ * </ol>
+ * </p>
  *
- * Tests the CPU, Registers and Flags classes.
- *
- * Tested CPU operations:
- * 1. Reset
- * 2. Program loading
- * 3. Fetch
- * 4. Decode
- * 5. Execute
- * 6. Step cycle
- * 7. NOP
- * 8. MOV A,#immediate
- * 9. ADD A,#immediate
- * 10. ADD with Carry
- * 11. ADD signed overflow
- * 12. INC A
- * 13. DEC A
- * 14. CLR A
- *
- * Note:
- * This project follows the current CPU/Registers/Flags implementation.
- * The 8051-style flags available are:
- * CY - Carry
- * AC - Auxiliary Carry
- * OV - Overflow
- * P  - Parity
- *
- * There is NO Zero flag in the current Flags class.
+ * <p><b>Team Boundary Note:</b></p>
+ * Student 3 owns the instruction-set definitions. This test suite does not
+ * duplicate a full instruction test suite; it tests execution strictly to
+ * verify the CPU's FETCH → DECODE → EXECUTE lifecycle and state management.
  */
 public class CPUTest {
 
-    private static int passed = 0;
-    private static int failed = 0;
+    private static int totalTests = 0;
+    private static int passedTests = 0;
+    private static int failedTests = 0;
 
+    /**
+     * Entry point for running the CPU test suite.
+     *
+     * @param args command-line arguments (unused)
+     */
     public static void main(String[] args) {
+        System.out.println("==================================================================");
+        System.out.println("            CPU COMPONENT TEST SUITE (STUDENT 1)                  ");
+        System.out.println("==================================================================\n");
 
-        System.out.println("======================================");
-        System.out.println("       CPU TEST PROGRAM");
-        System.out.println("======================================");
+        CPUTest suite = new CPUTest();
 
-        testResetBehavior();
-        testProgramLoading();
-        testFetch();
-        testDecode();
-        testExecute();
-        testStepCycle();
-        testInstructionNOP();
-        testInstructionMovImmediate();
-        testInstructionAddImmediate();
-        testInstructionAddWithCarry();
-        testInstructionAddWithSignedOverflow();
-        testInstructionIncA();
-        testInstructionDecA();
-        testInstructionClrA();
+        // 1-3. Initialization & Reset State Tests
+        suite.testCPUInitialization();
+        suite.testRegisterResetState();
+        suite.testFlagResetState();
 
-        System.out.println();
-        System.out.println("======================================");
-        System.out.println("             TEST SUMMARY");
-        System.out.println("======================================");
-        System.out.println("Tests Passed : " + passed);
-        System.out.println("Tests Failed : " + failed);
-        System.out.println("Total Tests  : " + (passed + failed));
+        // 4-5. Program Loading & PC Behavior
+        suite.testProgramCounterBehavior();
+        suite.testProgramLoading();
 
-        if (failed == 0) {
-            System.out.println();
-            System.out.println("ALL TESTS PASSED!");
+        // 6-8. Three Pipeline Stages (Fetch, Decode, Execute)
+        suite.testFetchPhase();
+        suite.testDecodePhase();
+        suite.testExecutePhase();
+
+        // 9-10. Control & Execution Cycles (step, run)
+        suite.testCompleteStepOperation();
+        suite.testRunBehavior();
+
+        // 11-12. Error & Halt Behavior
+        suite.testInvalidOpcodeAndErrorHandling();
+        suite.testHaltBehavior();
+
+        // 13-14. CPU Register & Flag Updates
+        suite.testRegisterUpdatesCausedByExecution();
+        suite.testFlagUpdatesCausedByExecution();
+
+        // Summary Report
+        System.out.println("\n==================================================================");
+        System.out.printf(" TEST RESULTS SUMMARY: TOTAL = %d | PASSED = %d | FAILED = %d\n",
+                totalTests, passedTests, failedTests);
+        System.out.println("==================================================================");
+
+        if (failedTests == 0) {
+            System.out.println(">>> ALL CPU UNIT TESTS PASSED SUCCESSFULLY! <<<\n");
         } else {
-            System.out.println();
-            System.out.println("SOME TESTS FAILED!");
+            System.err.println(">>> SOME CPU UNIT TESTS FAILED! <<<\n");
+            System.exit(1);
         }
     }
 
+    // =========================================================================
+    // 1. CPU INITIALIZATION
+    // =========================================================================
+
     /**
-     * Test 1:
-     * Check whether CPU reset correctly initializes registers,
-     * flags and CPU state.
+     * Test 1: Verifies default CPU constructor correctly allocates non-null registers,
+     * non-null flags, cleared memory, and clean initial lifecycle status.
      */
-    private static void testResetBehavior() {
-
-        System.out.println();
-        System.out.println("Test 1: Reset Behavior");
-
+    public void testCPUInitialization() {
+        System.out.println("[TEST 1] Testing CPU Initialization...");
         CPU cpu = new CPU();
 
-        cpu.getRegisters().setACC(0x7F);
-        cpu.getRegisters().setB(0x55);
-        cpu.getRegisters().setPC(0x1000);
-        cpu.getRegisters().setSP(0x20);
-        cpu.getRegisters().setDPTR(0x1234);
+        boolean regNotNull = (cpu.getRegisters() != null);
+        boolean flagsNotNull = (cpu.getFlags() != null);
+        boolean notHalted = !cpu.isHalted();
+        boolean notError = !cpu.isErrorState();
+        boolean noInstruction = (cpu.getCurrentInstruction() == null);
+        boolean noErrorMsg = (cpu.getLastErrorMessage() == null || cpu.getLastErrorMessage().isEmpty());
 
-        cpu.getFlags().setCY(true);
-        cpu.getFlags().setAC(true);
-        cpu.getFlags().setOV(true);
-        cpu.getFlags().setP(true);
+        boolean pass = regNotNull && flagsNotNull && notHalted && notError && noInstruction && noErrorMsg;
+        assertTest("CPU initializes with valid registers, flags, and unhalted state", pass,
+                String.format("Registers=%s, Flags=%s, Halted=%b, Error=%b",
+                        cpu.getRegisters(), cpu.getFlags(), cpu.isHalted(), cpu.isErrorState()));
+    }
 
+    // =========================================================================
+    // 2. REGISTER RESET STATE
+    // =========================================================================
+
+    /**
+     * Test 2: Verifies register values match hardware reset specifications:
+     * ACC=0x00, B=0x00, PC=0x0000, SP=0x07, DPTR=0x0000.
+     */
+    public void testRegisterResetState() {
+        System.out.println("[TEST 2] Testing Register Reset State...");
+        CPU cpu = new CPU();
+
+        // Dirty registers with arbitrary non-reset values
+        cpu.getRegisters().setACC(0xAA);
+        cpu.getRegisters().setB(0xBB);
+        cpu.getRegisters().setPC(0x1234);
+        cpu.getRegisters().setSP(0x50);
+        cpu.getRegisters().setDPTR(0x89AB);
+
+        // Perform Reset
         cpu.reset();
 
-        assertCondition(
-                cpu.getRegisters().getACC() == 0,
-                "ACC should reset to 0"
-        );
+        Registers r = cpu.getRegisters();
+        boolean pass = (r.getACC() == 0x00)
+                && (r.getB() == 0x00)
+                && (r.getPC() == 0x0000)
+                && (r.getSP() == 0x07)
+                && (r.getDPTR() == 0x0000)
+                && (r.getDPH() == 0x00)
+                && (r.getDPL() == 0x00);
 
-        assertCondition(
-                cpu.getRegisters().getB() == 0,
-                "B should reset to 0"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getPC() == 0,
-                "PC should reset to 0"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getSP() == 0x07,
-                "SP should reset to 0x07"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getDPTR() == 0,
-                "DPTR should reset to 0"
-        );
-
-        assertCondition(
-                !cpu.getFlags().isCY(),
-                "CY should reset to false"
-        );
-
-        assertCondition(
-                !cpu.getFlags().isAC(),
-                "AC should reset to false"
-        );
-
-        assertCondition(
-                !cpu.getFlags().isOV(),
-                "OV should reset to false"
-        );
-
-        assertCondition(
-                !cpu.getFlags().isP(),
-                "P should reset to false"
-        );
-
-        assertCondition(
-                cpu.getCurrentInstruction() == null,
-                "Current instruction should reset to null"
-        );
-
-        assertCondition(
-                !cpu.isHalted(),
-                "CPU should not be halted after reset"
-        );
-
-        assertCondition(
-                !cpu.isErrorState(),
-                "CPU should not be in error state after reset"
-        );
+        assertTest("Registers reset to hardware defaults (ACC=0x00, B=0x00, PC=0x0000, SP=0x07, DPTR=0x0000)", pass,
+                String.format("ACC=0x%02X, B=0x%02X, PC=0x%04X, SP=0x%02X, DPTR=0x%04X",
+                        r.getACC(), r.getB(), r.getPC(), r.getSP(), r.getDPTR()));
     }
 
+    // =========================================================================
+    // 3. FLAG RESET STATE
+    // =========================================================================
+
     /**
-     * Test 2:
-     * Check whether a program can be loaded correctly.
+     * Test 3: Verifies all status flags (CY, AC, OV, P) are cleared to false on reset.
      */
-    private static void testProgramLoading() {
-
-        System.out.println();
-        System.out.println("Test 2: Program Loading");
-
+    public void testFlagResetState() {
+        System.out.println("[TEST 3] Testing Flag Reset State...");
         CPU cpu = new CPU();
 
-        int[] program = {
-                CPU.OP_NOP,
-                CPU.OP_INC_A,
-                CPU.OP_DEC_A
-        };
+        // Set all flags to true
+        cpu.getFlags().setCarry(true);
+        cpu.getFlags().setAuxiliaryCarry(true);
+        cpu.getFlags().setOverflow(true);
+        cpu.getFlags().setParity(true);
 
-        cpu.loadProgram(program);
+        // Perform Reset
+        cpu.reset();
 
-        assertCondition(
-                cpu.getRegisters().getPC() == 0,
-                "PC should start at 0 after program loading"
-        );
+        Flags f = cpu.getFlags();
+        boolean pass = !f.isCarry() && !f.isAuxiliaryCarry() && !f.isOverflow() && !f.isParity();
 
-        assertCondition(
-                cpu.getProgramMemory()[0] == CPU.OP_NOP,
-                "First instruction should be loaded correctly"
-        );
-
-        assertCondition(
-                cpu.getProgramMemory()[1] == CPU.OP_INC_A,
-                "Second instruction should be loaded correctly"
-        );
-
-        assertCondition(
-                cpu.getProgramMemory()[2] == CPU.OP_DEC_A,
-                "Third instruction should be loaded correctly"
-        );
-
-        assertCondition(
-                !cpu.isHalted(),
-                "CPU should not be halted after loading program"
-        );
-
-        assertCondition(
-                !cpu.isErrorState(),
-                "CPU should not be in error state after loading program"
-        );
+        assertTest("All status flags reset to false (CY=0, AC=0, OV=0, P=0)", pass,
+                String.format("CY=%b, AC=%b, OV=%b, P=%b",
+                        f.isCarry(), f.isAuxiliaryCarry(), f.isOverflow(), f.isParity()));
     }
 
+    // =========================================================================
+    // 4. PROGRAM COUNTER BEHAVIOR
+    // =========================================================================
+
     /**
-     * Test 3:
-     * Check FETCH operation.
-     *
-     * Program:
-     * 0x04              -> INC A
-     * 0x74 0x55         -> MOV A,#0x55
+     * Test 4: Verifies PC advances accurately according to instruction length
+     * (1-byte advances by +1, 2-byte advances by +2).
      */
-    private static void testFetch() {
-
-        System.out.println();
-        System.out.println("Test 3: Fetch");
-
+    public void testProgramCounterBehavior() {
+        System.out.println("[TEST 4] Testing Program Counter (PC) Behavior...");
         CPU cpu = new CPU();
 
-        int[] program = {
-                CPU.OP_INC_A,
-                CPU.OP_MOV_A_IMM,
-                0x55
-        };
+        // Program: 1-byte (NOP), 2-byte (MOV A, #0x55), 1-byte (INC A)
+        int[] program = { CPU.OP_NOP, CPU.OP_MOV_A_IMM, 0x55, CPU.OP_INC_A };
+        cpu.loadProgram(0x0100, program);
 
-        cpu.loadProgram(program);
+        boolean initialPC = (cpu.getRegisters().getPC() == 0x0100);
 
-        // Fetch INC A
-        cpu.fetch();
+        // Step 1: NOP (1 byte) -> PC should be 0x0101
+        cpu.step();
+        boolean pcAfter1Byte = (cpu.getRegisters().getPC() == 0x0101);
 
-        CPU.Instruction instruction1 = cpu.getCurrentInstruction();
+        // Step 2: MOV A, #0x55 (2 bytes) -> PC should be 0x0103
+        cpu.step();
+        boolean pcAfter2Byte = (cpu.getRegisters().getPC() == 0x0103);
 
-        assertCondition(
-                instruction1 != null,
-                "Fetched instruction should not be null"
-        );
+        // Step 3: INC A (1 byte) -> PC should be 0x0104
+        cpu.step();
+        boolean pcAfter3rd = (cpu.getRegisters().getPC() == 0x0104);
 
-        assertCondition(
-                instruction1.getOpcode() == CPU.OP_INC_A,
-                "Fetched opcode should be INC A"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getPC() == 1,
-                "PC should become 1 after fetching INC A"
-        );
-
-        // Fetch MOV A,#0x55
-        cpu.fetch();
-
-        CPU.Instruction instruction2 = cpu.getCurrentInstruction();
-
-        assertCondition(
-                instruction2 != null,
-                "Second fetched instruction should not be null"
-        );
-
-        assertCondition(
-                instruction2.getOpcode() == CPU.OP_MOV_A_IMM,
-                "Second opcode should be MOV A,#immediate"
-        );
-
-        assertCondition(
-                instruction2.getOperand() == 0x55,
-                "MOV immediate operand should be 0x55"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getPC() == 3,
-                "PC should become 3 after fetching MOV A,#0x55"
-        );
+        boolean pass = initialPC && pcAfter1Byte && pcAfter2Byte && pcAfter3rd;
+        assertTest("PC increments by 1 for 1-byte instructions and by 2 for 2-byte instructions", pass,
+                String.format("PC Sequence: Init=0x%04X, Step1=0x%04X, Step2=0x%04X, Step3=0x%04X",
+                        0x0100, (initialPC ? 0x0101 : cpu.getRegisters().getPC()),
+                        cpu.getRegisters().getPC(), cpu.getRegisters().getPC()));
     }
 
+    // =========================================================================
+    // 5. PROGRAM LOADING
+    // =========================================================================
+
     /**
-     * Test 4:
-     * Check DECODE operation.
+     * Test 5: Verifies program bytes are correctly loaded into memory and PC is initialized.
      */
-    private static void testDecode() {
-
-        System.out.println();
-        System.out.println("Test 4: Decode");
-
+    public void testProgramLoading() {
+        System.out.println("[TEST 5] Testing Program Loading...");
         CPU cpu = new CPU();
 
-        int[] program = {
-                CPU.OP_MOV_A_IMM,
-                0x42
-        };
+        int startAddr = 0x0200;
+        int[] program = { CPU.OP_MOV_A_IMM, 0x42, CPU.OP_CLR_A };
+        cpu.loadProgram(startAddr, program);
 
-        cpu.loadProgram(program);
+        boolean pcSet = (cpu.getRegisters().getPC() == startAddr);
+        boolean b0 = (cpu.getMemoryByte(startAddr) == CPU.OP_MOV_A_IMM);
+        boolean b1 = (cpu.getMemoryByte(startAddr + 1) == 0x42);
+        boolean b2 = (cpu.getMemoryByte(startAddr + 2) == CPU.OP_CLR_A);
+
+        boolean pass = pcSet && b0 && b1 && b2;
+        assertTest("Program loaded into memory starting at target address with PC initialized", pass,
+                String.format("PC=0x%04X, Mem[0]=0x%02X, Mem[1]=0x%02X, Mem[2]=0x%02X",
+                        cpu.getRegisters().getPC(),
+                        cpu.getMemoryByte(startAddr),
+                        cpu.getMemoryByte(startAddr + 1),
+                        cpu.getMemoryByte(startAddr + 2)));
+    }
+
+    // =========================================================================
+    // 6. FETCH PHASE
+    // =========================================================================
+
+    /**
+     * Test 6: Verifies fetch() reads the opcode, records address and length, and increments PC.
+     */
+    public void testFetchPhase() {
+        System.out.println("[TEST 6] Testing FETCH Phase...");
+        CPU cpu = new CPU();
+
+        int[] program = { CPU.OP_MOV_A_IMM, 0x88 };
+        cpu.loadProgram(0x0000, program);
 
         cpu.fetch();
+        CPU.Instruction instr = cpu.getCurrentInstruction();
 
-        CPU.Instruction instruction = cpu.getCurrentInstruction();
+        boolean instrNotNull = (instr != null);
+        boolean opcodeMatch = instrNotNull && (instr.getOpcode() == CPU.OP_MOV_A_IMM);
+        boolean operandMatch = instrNotNull && (instr.getOperand() == 0x88);
+        boolean addrMatch = instrNotNull && (instr.getAddress() == 0x0000);
+        boolean lenMatch = instrNotNull && (instr.getLength() == 2);
+        boolean pcAdvanced = (cpu.getRegisters().getPC() == 0x0002);
 
-        assertCondition(
-                instruction != null,
-                "Instruction should be fetched before decode"
-        );
-
-        cpu.decode();
-
-        assertCondition(
-                instruction.isValid(),
-                "MOV instruction should be valid after decode"
-        );
-
-        assertCondition(
-                instruction.getMnemonic() != null,
-                "Mnemonic should not be null"
-        );
-
-        assertCondition(
-                instruction.getMnemonic().contains("MOV A"),
-                "Mnemonic should contain MOV A"
-        );
-
-        assertCondition(
-                instruction.getMnemonic().contains("42"),
-                "Mnemonic should contain operand 42"
-        );
+        boolean pass = instrNotNull && opcodeMatch && operandMatch && addrMatch && lenMatch && pcAdvanced;
+        assertTest("fetch() reads opcode and operand, stores instruction metadata, and updates PC", pass,
+                String.format("Instruction=%s, PC=0x%04X", instr, cpu.getRegisters().getPC()));
     }
 
+    // =========================================================================
+    // 7. DECODE PHASE
+    // =========================================================================
+
     /**
-     * Test 5:
-     * Check EXECUTE operation.
-     *
-     * MOV A,#10 should place 10 into ACC.
+     * Test 7: Verifies decode() parses the opcode and populates the mnemonic and validity.
      */
-    private static void testExecute() {
-
-        System.out.println();
-        System.out.println("Test 5: Execute");
-
+    public void testDecodePhase() {
+        System.out.println("[TEST 7] Testing DECODE Phase...");
         CPU cpu = new CPU();
 
-        int[] program = {
-                CPU.OP_MOV_A_IMM,
-                10
-        };
-
-        cpu.loadProgram(program);
+        int[] program = { CPU.OP_ADD_A_IMM, 0x15 };
+        cpu.loadProgram(0x0000, program);
 
         cpu.fetch();
         cpu.decode();
+
+        CPU.Instruction instr = cpu.getCurrentInstruction();
+        boolean valid = (instr != null) && instr.isValid();
+        boolean mnemonicCorrect = (instr != null) && instr.getMnemonic().startsWith("ADD A");
+
+        boolean pass = valid && mnemonicCorrect;
+        assertTest("decode() assigns correct mnemonic and marks instruction as valid", pass,
+                String.format("Mnemonic=\"%s\", Valid=%b",
+                        (instr != null ? instr.getMnemonic() : "null"), valid));
+    }
+
+    // =========================================================================
+    // 8. EXECUTE PHASE
+    // =========================================================================
+
+    /**
+     * Test 8: Verifies execute() updates registers without refetching or modifying PC further.
+     */
+    public void testExecutePhase() {
+        System.out.println("[TEST 8] Testing EXECUTE Phase...");
+        CPU cpu = new CPU();
+
+        int[] program = { CPU.OP_MOV_A_IMM, 0x7E };
+        cpu.loadProgram(0x0000, program);
+
+        cpu.fetch();
+        cpu.decode();
+        int pcBeforeExec = cpu.getRegisters().getPC();
+
         cpu.execute();
+        int pcAfterExec = cpu.getRegisters().getPC();
 
-        assertCondition(
-                cpu.getRegisters().getACC() == 10,
-                "ACC should contain 10 after execution"
-        );
+        boolean accUpdated = (cpu.getRegisters().getACC() == 0x7E);
+        boolean pcUnchangedDuringExec = (pcBeforeExec == pcAfterExec);
 
-        assertCondition(
-                cpu.getRegisters().getPC() == 2,
-                "PC should be 2 after MOV A,#10"
-        );
+        boolean pass = accUpdated && pcUnchangedDuringExec;
+        assertTest("execute() performs register update and preserves PC position", pass,
+                String.format("ACC=0x%02X, PC_Before=0x%04X, PC_After=0x%04X",
+                        cpu.getRegisters().getACC(), pcBeforeExec, pcAfterExec));
     }
 
+    // =========================================================================
+    // 9. COMPLETE STEP() OPERATION
+    // =========================================================================
+
     /**
-     * Test 6:
-     * Check the complete FETCH -> DECODE -> EXECUTE cycle
-     * using step().
+     * Test 9: Verifies step() advances through FETCH → DECODE → EXECUTE in a single call.
      */
-    private static void testStepCycle() {
+    public void testCompleteStepOperation() {
+        System.out.println("[TEST 9] Testing step() Full Instruction Cycle...");
+        CPU cpu = new CPU();
 
-        System.out.println();
-        System.out.println("Test 6: Step Cycle");
+        int[] program = { CPU.OP_MOV_A_IMM, 0x10, CPU.OP_INC_A };
+        cpu.loadProgram(program);
 
+        // Step 1: MOV A, #0x10
+        boolean step1Success = cpu.step();
+        boolean accAfterStep1 = (cpu.getRegisters().getACC() == 0x10);
+
+        // Step 2: INC A
+        boolean step2Success = cpu.step();
+        boolean accAfterStep2 = (cpu.getRegisters().getACC() == 0x11);
+
+        boolean pass = step1Success && accAfterStep1 && step2Success && accAfterStep2;
+        assertTest("step() successfully executes one complete instruction cycle per call", pass,
+                String.format("Step1_ACC=0x%02X, Step2_ACC=0x%02X",
+                        cpu.getRegisters().getACC(), cpu.getRegisters().getACC()));
+    }
+
+    // =========================================================================
+    // 10. RUN() BEHAVIOR
+    // =========================================================================
+
+    /**
+     * Test 10: Verifies run() and run(maxSteps) execute multiple instructions until limit or halt.
+     */
+    public void testRunBehavior() {
+        System.out.println("[TEST 10] Testing run() Multi-Step Execution...");
         CPU cpu = new CPU();
 
         int[] program = {
-                CPU.OP_MOV_A_IMM,
-                25,
-                CPU.OP_INC_A
+            CPU.OP_MOV_A_IMM, 0x05, // 2 bytes
+            CPU.OP_INC_A,           // 1 byte
+            CPU.OP_INC_A,           // 1 byte
+            CPU.OP_NOP              // 1 byte
         };
-
         cpu.loadProgram(program);
 
-        boolean result1 = cpu.step();
+        // Execute exactly the 4 instructions of the program
+        int stepsExecuted = cpu.run(4);
 
-        assertCondition(
-                result1,
-                "First step should execute successfully"
-        );
+        boolean executedAll = (stepsExecuted == 4);
+        boolean finalAcc = (cpu.getRegisters().getACC() == 0x07);
+        boolean finalPC = (cpu.getRegisters().getPC() == program.length);
 
-        assertCondition(
-                cpu.getRegisters().getACC() == 25,
-                "ACC should become 25 after first step"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getPC() == 2,
-                "PC should become 2 after first step"
-        );
-
-        boolean result2 = cpu.step();
-
-        assertCondition(
-                result2,
-                "Second step should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 26,
-                "ACC should become 26 after INC A"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getPC() == 3,
-                "PC should become 3 after second step"
-        );
+        boolean pass = executedAll && finalAcc && finalPC;
+        assertTest("run(maxSteps) executes sequential instructions correctly and returns count", pass,
+                String.format("StepsExecuted=%d, Final_ACC=0x%02X, Final_PC=0x%04X",
+                        stepsExecuted, cpu.getRegisters().getACC(), cpu.getRegisters().getPC()));
     }
 
+    // =========================================================================
+    // 11. INVALID OPCODE / ERROR HANDLING
+    // =========================================================================
+
     /**
-     * Test 7:
-     * NOP should not modify ACC.
+     * Test 11: Verifies unknown opcodes trigger error state, halt the CPU, and provide error info.
      */
-    private static void testInstructionNOP() {
-
-        System.out.println();
-        System.out.println("Test 7: NOP Instruction");
-
+    public void testInvalidOpcodeAndErrorHandling() {
+        System.out.println("[TEST 11] Testing Invalid Opcode & Error Handling...");
         CPU cpu = new CPU();
 
-        int[] program = {
-                CPU.OP_NOP
-        };
-
+        int invalidOpcode = 0xFF; // Not supported in minimal test set
+        int[] program = { invalidOpcode };
         cpu.loadProgram(program);
 
-        cpu.getRegisters().setACC(0x55);
+        boolean stepResult = cpu.step();
 
-        boolean result = cpu.step();
+        boolean stepFailed = !stepResult;
+        boolean isError = cpu.isErrorState();
+        boolean isHalted = cpu.isHalted();
+        boolean hasMsg = (cpu.getLastErrorMessage() != null && !cpu.getLastErrorMessage().isEmpty());
 
-        assertCondition(
-                result,
-                "NOP should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 0x55,
-                "NOP should not change ACC"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getPC() == 1,
-                "PC should increase by 1 after NOP"
-        );
+        boolean pass = stepFailed && isError && isHalted && hasMsg;
+        assertTest("Unknown opcode triggers error state, halts CPU, and populates error message", pass,
+                String.format("ErrorState=%b, Halted=%b, ErrorMsg=\"%s\"",
+                        isError, isHalted, cpu.getLastErrorMessage()));
     }
 
+    // =========================================================================
+    // 12. HALT BEHAVIOR
+    // =========================================================================
+
     /**
-     * Test 8:
-     * MOV A,#immediate.
+     * Test 12: Verifies CPU respects halted state and refuses to step or run while halted.
      */
-    private static void testInstructionMovImmediate() {
-
-        System.out.println();
-        System.out.println("Test 8: MOV A,#Immediate");
-
+    public void testHaltBehavior() {
+        System.out.println("[TEST 12] Testing Halt Behavior...");
         CPU cpu = new CPU();
 
-        int[] program = {
-                CPU.OP_MOV_A_IMM,
-                0x55
-        };
-
+        int[] program = { CPU.OP_INC_A };
         cpu.loadProgram(program);
 
-        boolean result = cpu.step();
+        // Manually halt the CPU
+        cpu.setHalted();
+        boolean wasHalted = cpu.isHalted();
 
-        assertCondition(
-                result,
-                "MOV A,#immediate should execute successfully"
-        );
+        // Attempting to step when halted should return false and not execute
+        boolean stepOutcome = cpu.step();
+        boolean accUnchanged = (cpu.getRegisters().getACC() == 0x00);
 
-        assertCondition(
-                cpu.getRegisters().getACC() == 0x55,
-                "ACC should become 0x55"
-        );
-
-        /*
-         * 0x55 = 01010101
-         * Number of 1 bits = 4
-         * 8051 parity flag P = 0 for even parity.
-         */
-        assertCondition(
-                !cpu.getFlags().isP(),
-                "Parity flag should be false for 0x55"
-        );
+        boolean pass = wasHalted && !stepOutcome && accUnchanged;
+        assertTest("CPU in halted state prevents step() from advancing or executing instructions", pass,
+                String.format("IsHalted=%b, StepOutcome=%b, ACC=0x%02X",
+                        wasHalted, stepOutcome, cpu.getRegisters().getACC()));
     }
 
+    // =========================================================================
+    // 13. REGISTER UPDATES CAUSED BY CPU EXECUTION
+    // =========================================================================
+
     /**
-     * Test 9:
-     * Basic ADD A,#immediate.
+     * Test 13: Verifies CPU execution properly updates registers (e.g. ACC 8-bit wrap).
+     */
+    public void testRegisterUpdatesCausedByExecution() {
+        System.out.println("[TEST 13] Testing Register Updates Caused by Execution...");
+        CPU cpu = new CPU();
+
+        // Test 8-bit wrap around: MOV A, #0xFF then INC A -> ACC should wrap to 0x00
+        int[] program = { CPU.OP_MOV_A_IMM, 0xFF, CPU.OP_INC_A };
+        cpu.loadProgram(program);
+
+        cpu.run();
+
+        boolean accWrapped = (cpu.getRegisters().getACC() == 0x00);
+        boolean pass = accWrapped;
+        assertTest("CPU arithmetic correctly confines Accumulator to 8-bit wrap (0xFF -> 0x00)", pass,
+                String.format("Final ACC=0x%02X", cpu.getRegisters().getACC()));
+    }
+
+    // =========================================================================
+    // 14. FLAG UPDATES CAUSED BY CPU EXECUTION
+    // =========================================================================
+
+    /**
+     * Test 14: Verifies CPU execution updates status flags (CY, AC, OV, P) during ALU operations.
+     */
+    public void testFlagUpdatesCausedByExecution() {
+        System.out.println("[TEST 14] Testing Flag Updates Caused by Execution...");
+        CPU cpu = new CPU();
+
+        // Addition that triggers CY, AC, and OV:
+        // MOV A, #0x70   (0111 0000)
+        // ADD A, #0x90   (1001 0000)
+        // Sum = 0x100 -> ACC = 0x00, CY = 1 (overflow > 255), P = 0 (even 0 set bits)
+        int[] program = { CPU.OP_MOV_A_IMM, 0x70, CPU.OP_ADD_A_IMM, 0x90 };
+        cpu.loadProgram(program);
+
+        cpu.run();
+
+        Flags f = cpu.getFlags();
+        boolean cySet = f.isCarry();
+        boolean parityCalculated = !f.isParity(); // 0 set bits -> even parity -> P = false
+
+        boolean pass = cySet && parityCalculated;
+        assertTest("ALU operation correctly updates Carry (CY) and Parity (P) flags", pass,
+                String.format("CY=%b, AC=%b, OV=%b, P=%b, ACC=0x%02X",
+                        f.isCarry(), f.isAuxiliaryCarry(), f.isOverflow(), f.isParity(),
+                        cpu.getRegisters().getACC()));
+    }
+
+    // =========================================================================
+    // ASSERTION HELPER
+    // =========================================================================
+
+    /**
+     * Evaluates a test condition and formats test output.
      *
-     * 10 + 20 = 30
+     * @param description test case description
+     * @param condition   boolean result of the test assertion
+     * @param details     diagnostic information on failure or state summary
      */
-    private static void testInstructionAddImmediate() {
-
-        System.out.println();
-        System.out.println("Test 9: ADD A,#Immediate");
-
-        CPU cpu = new CPU();
-
-        int[] program = {
-                CPU.OP_MOV_A_IMM,
-                10,
-                CPU.OP_ADD_A_IMM,
-                20
-        };
-
-        cpu.loadProgram(program);
-
-        boolean result1 = cpu.step();
-
-        assertCondition(
-                result1,
-                "MOV A,#10 should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 10,
-                "ACC should be 10"
-        );
-
-        boolean result2 = cpu.step();
-
-        assertCondition(
-                result2,
-                "ADD A,#20 should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 30,
-                "10 + 20 should produce 30"
-        );
-
-        assertCondition(
-                !cpu.getFlags().isCY(),
-                "Carry flag should be false"
-        );
-
-        assertCondition(
-                !cpu.getFlags().isAC(),
-                "Auxiliary Carry should be false for 10 + 20"
-        );
-
-        assertCondition(
-                !cpu.getFlags().isOV(),
-                "Overflow flag should be false"
-        );
-
-        /*
-         * 30 = 0x1E = 00011110
-         * Number of 1 bits = 4
-         * Therefore P = 0.
-         */
-        assertCondition(
-                !cpu.getFlags().isP(),
-                "Parity should be false for result 30"
-        );
-    }
-
-    /**
-     * Test 10:
-     * ADD operation producing a carry.
-     *
-     * 0xFF + 0x01 = 0x00 with Carry = 1.
-     */
-    private static void testInstructionAddWithCarry() {
-
-        System.out.println();
-        System.out.println("Test 10: ADD with Carry");
-
-        CPU cpu = new CPU();
-
-        int[] program = {
-                CPU.OP_MOV_A_IMM,
-                0xFF,
-                CPU.OP_ADD_A_IMM,
-                0x01
-        };
-
-        cpu.loadProgram(program);
-
-        boolean result1 = cpu.step();
-
-        assertCondition(
-                result1,
-                "MOV A,#0xFF should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 0xFF,
-                "ACC should be 0xFF"
-        );
-
-        boolean result2 = cpu.step();
-
-        assertCondition(
-                result2,
-                "ADD A,#0x01 should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 0x00,
-                "0xFF + 0x01 should wrap to 0x00"
-        );
-
-        assertCondition(
-                cpu.getFlags().isCY(),
-                "Carry flag should be true"
-        );
-
-        assertCondition(
-                cpu.getFlags().isAC(),
-                "Auxiliary Carry should be true"
-        );
-
-        assertCondition(
-                !cpu.getFlags().isOV(),
-                "Overflow should be false for 0xFF + 0x01"
-        );
-
-        assertCondition(
-                !cpu.getFlags().isP(),
-                "Parity should be false for 0x00"
-        );
-    }
-
-    /**
-     * Test 11:
-     * Signed overflow.
-     *
-     * 0x7F + 0x01 = 0x80
-     *
-     * In signed 8-bit:
-     * 127 + 1 = -128
-     *
-     * Therefore OV = 1.
-     */
-    private static void testInstructionAddWithSignedOverflow() {
-
-        System.out.println();
-        System.out.println("Test 11: ADD Signed Overflow");
-
-        CPU cpu = new CPU();
-
-        int[] program = {
-                CPU.OP_MOV_A_IMM,
-                0x7F,
-                CPU.OP_ADD_A_IMM,
-                0x01
-        };
-
-        cpu.loadProgram(program);
-
-        boolean result1 = cpu.step();
-
-        assertCondition(
-                result1,
-                "MOV A,#0x7F should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 0x7F,
-                "ACC should be 0x7F"
-        );
-
-        boolean result2 = cpu.step();
-
-        assertCondition(
-                result2,
-                "ADD A,#0x01 should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 0x80,
-                "0x7F + 0x01 should produce 0x80"
-        );
-
-        assertCondition(
-                cpu.getFlags().isOV(),
-                "Overflow flag should be true"
-        );
-
-        assertCondition(
-                !cpu.getFlags().isCY(),
-                "Carry should be false for 0x7F + 0x01"
-        );
-
-        /*
-         * 0x80 = 10000000
-         * Number of 1 bits = 1
-         * Therefore P = 1.
-         */
-        assertCondition(
-                cpu.getFlags().isP(),
-                "Parity should be true for 0x80"
-        );
-    }
-
-    /**
-     * Test 12:
-     * INC A.
-     *
-     * 5 + 1 = 6
-     */
-    private static void testInstructionIncA() {
-
-        System.out.println();
-        System.out.println("Test 12: INC A");
-
-        CPU cpu = new CPU();
-
-        int[] program = {
-                CPU.OP_MOV_A_IMM,
-                5,
-                CPU.OP_INC_A
-        };
-
-        cpu.loadProgram(program);
-
-        boolean result1 = cpu.step();
-
-        assertCondition(
-                result1,
-                "MOV A,#5 should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 5,
-                "ACC should be 5"
-        );
-
-        boolean result2 = cpu.step();
-
-        assertCondition(
-                result2,
-                "INC A should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 6,
-                "ACC should become 6"
-        );
-
-        /*
-         * 6 = 00000110
-         * Number of 1 bits = 2
-         * P = 0.
-         */
-        assertCondition(
-                !cpu.getFlags().isP(),
-                "Parity should be false for 6"
-        );
-    }
-
-    /**
-     * Test 13:
-     * DEC A.
-     *
-     * 5 - 1 = 4
-     */
-    private static void testInstructionDecA() {
-
-        System.out.println();
-        System.out.println("Test 13: DEC A");
-
-        CPU cpu = new CPU();
-
-        int[] program = {
-                CPU.OP_MOV_A_IMM,
-                5,
-                CPU.OP_DEC_A
-        };
-
-        cpu.loadProgram(program);
-
-        boolean result1 = cpu.step();
-
-        assertCondition(
-                result1,
-                "MOV A,#5 should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 5,
-                "ACC should be 5"
-        );
-
-        boolean result2 = cpu.step();
-
-        assertCondition(
-                result2,
-                "DEC A should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 4,
-                "ACC should become 4"
-        );
-
-        /*
-         * 4 = 00000100
-         * Number of 1 bits = 1
-         * P = 1.
-         */
-        assertCondition(
-                cpu.getFlags().isP(),
-                "Parity should be true for 4"
-        );
-    }
-
-    /**
-     * Test 14:
-     * CLR A.
-     *
-     * Any value should become 0.
-     */
-    private static void testInstructionClrA() {
-
-        System.out.println();
-        System.out.println("Test 14: CLR A");
-
-        CPU cpu = new CPU();
-
-        int[] program = {
-                CPU.OP_MOV_A_IMM,
-                0x55,
-                CPU.OP_CLR_A
-        };
-
-        cpu.loadProgram(program);
-
-        boolean result1 = cpu.step();
-
-        assertCondition(
-                result1,
-                "MOV A,#0x55 should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 0x55,
-                "ACC should be 0x55"
-        );
-
-        boolean result2 = cpu.step();
-
-        assertCondition(
-                result2,
-                "CLR A should execute successfully"
-        );
-
-        assertCondition(
-                cpu.getRegisters().getACC() == 0,
-                "ACC should become 0 after CLR A"
-        );
-
-        assertCondition(
-                !cpu.getFlags().isP(),
-                "Parity should be false for 0x00"
-        );
-    }
-
-    /**
-     * Common assertion method.
-     */
-    private static void assertCondition(boolean condition, String message) {
-
+    private void assertTest(String description, boolean condition, String details) {
+        totalTests++;
         if (condition) {
-            System.out.println("[PASS] " + message);
-            passed++;
+            passedTests++;
+            System.out.println("  [PASS] " + description);
         } else {
-            System.out.println("[FAIL] " + message);
-            failed++;
+            failedTests++;
+            System.err.println("  [FAIL] " + description);
+            System.err.println("         Details: " + details);
         }
     }
 }

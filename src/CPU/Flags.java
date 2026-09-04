@@ -1,14 +1,20 @@
 package cpu;
 
 /**
- * Flags represents the CPU status flags for an educational 8051/STC89C52-style
- * 8-bit microcontroller simulator (parts of the Program Status Word / PSW register).
- *
- * Implemented flags:
- * - CY (Carry Flag): Bit 7 of PSW
- * - AC (Auxiliary Carry Flag): Bit 6 of PSW
- * - OV (Overflow Flag): Bit 2 of PSW
- * - P  (Parity Flag): Bit 0 of PSW
+ * Represents the CPU status flags for an educational 8-bit microcontroller
+ * simulator (8051 / STC89C52 style).
+ * <p>
+ * This class encapsulates the status condition bits typically found in the
+ * Program Status Word (PSW) register:
+ * <ul>
+ *   <li><b>CY (Carry Flag)</b>: Bit 7 of PSW</li>
+ *   <li><b>AC (Auxiliary Carry Flag)</b>: Bit 6 of PSW</li>
+ *   <li><b>OV (Overflow Flag)</b>: Bit 2 of PSW</li>
+ *   <li><b>P (Parity Flag)</b>: Bit 0 of PSW</li>
+ * </ul>
+ * Arithmetic operations calculate CY, AC, and OV in {@code CPU.java} and update
+ * these flags accordingly.
+ * </p>
  */
 public class Flags {
 
@@ -16,7 +22,7 @@ public class Flags {
      * Carry Flag (CY):
      * Set to true when an arithmetic operation (such as ADD) generates a carry out
      * of the most significant bit (Bit 7), or when a borrow occurs during subtraction (SUBB).
-     * Also acts as a 1-bit boolean accumulator in bit-level instructions.
+     * Also acts as a 1-bit boolean accumulator for bit-addressable instructions.
      */
     private boolean cy;
 
@@ -39,8 +45,8 @@ public class Flags {
     /**
      * Parity Flag (P):
      * Reflects the parity of the Accumulator (ACC).
-     * In 8051 architecture, P is set to true (1) if the number of '1' bits in the
-     * accumulator is ODD, and false (0) if the number of '1' bits is EVEN.
+     * In 8051 architecture, P is set to true (1) if the number of set '1' bits in the
+     * accumulator is ODD, and false (0) if the number of set '1' bits is EVEN.
      */
     private boolean p;
 
@@ -64,12 +70,15 @@ public class Flags {
 
     /**
      * Updates the Parity flag (P) based on the current 8-bit value of the accumulator.
-     * 
-     * In 8051 systems:
-     * - P = 1 (true) if the number of set bits ('1's) in ACC is odd (Odd Parity).
-     * - P = 0 (false) if the number of set bits ('1's) in ACC is even.
+     * <p>
+     * Only the lower 8 bits (Bit 0 through Bit 7) of the accumulator value are evaluated:
+     * <ul>
+     *   <li>{@code P = true} (1) if the number of set '1' bits is odd (Odd Parity).</li>
+     *   <li>{@code P = false} (0) if the number of set '1' bits is even (Even Parity).</li>
+     * </ul>
+     * </p>
      *
-     * @param accumulator the current 8-bit value of the accumulator (ACC)
+     * @param accumulator the raw integer value of the accumulator (ACC)
      */
     public void updateParity(int accumulator) {
         int acc8 = accumulator & 0xFF;
@@ -81,18 +90,38 @@ public class Flags {
     // Getter and Setter Methods: Carry Flag (CY)
     // ==========================================
 
+    /**
+     * Checks if the Carry flag (CY) is set.
+     *
+     * @return true if CY is set, false otherwise
+     */
     public boolean isCY() {
         return cy;
     }
 
+    /**
+     * Descriptive alias to check if the Carry flag (CY) is set.
+     *
+     * @return true if Carry flag is set, false otherwise
+     */
     public boolean isCarry() {
         return cy;
     }
 
+    /**
+     * Sets the Carry flag (CY).
+     *
+     * @param cy new value for the Carry flag
+     */
     public void setCY(boolean cy) {
         this.cy = cy;
     }
 
+    /**
+     * Descriptive alias to set the Carry flag (CY).
+     *
+     * @param carry new value for the Carry flag
+     */
     public void setCarry(boolean carry) {
         this.cy = carry;
     }
@@ -101,18 +130,38 @@ public class Flags {
     // Getter and Setter Methods: Auxiliary Carry Flag (AC)
     // ====================================================
 
+    /**
+     * Checks if the Auxiliary Carry flag (AC) is set.
+     *
+     * @return true if AC is set, false otherwise
+     */
     public boolean isAC() {
         return ac;
     }
 
+    /**
+     * Descriptive alias to check if the Auxiliary Carry flag (AC) is set.
+     *
+     * @return true if Auxiliary Carry flag is set, false otherwise
+     */
     public boolean isAuxiliaryCarry() {
         return ac;
     }
 
+    /**
+     * Sets the Auxiliary Carry flag (AC).
+     *
+     * @param ac new value for the Auxiliary Carry flag
+     */
     public void setAC(boolean ac) {
         this.ac = ac;
     }
 
+    /**
+     * Descriptive alias to set the Auxiliary Carry flag (AC).
+     *
+     * @param ac new value for the Auxiliary Carry flag
+     */
     public void setAuxiliaryCarry(boolean ac) {
         this.ac = ac;
     }
@@ -121,18 +170,38 @@ public class Flags {
     // Getter and Setter Methods: Overflow Flag (OV)
     // ==========================================
 
+    /**
+     * Checks if the Overflow flag (OV) is set.
+     *
+     * @return true if OV is set, false otherwise
+     */
     public boolean isOV() {
         return ov;
     }
 
+    /**
+     * Descriptive alias to check if the Overflow flag (OV) is set.
+     *
+     * @return true if Overflow flag is set, false otherwise
+     */
     public boolean isOverflow() {
         return ov;
     }
 
+    /**
+     * Sets the Overflow flag (OV).
+     *
+     * @param ov new value for the Overflow flag
+     */
     public void setOV(boolean ov) {
         this.ov = ov;
     }
 
+    /**
+     * Descriptive alias to set the Overflow flag (OV).
+     *
+     * @param ov new value for the Overflow flag
+     */
     public void setOverflow(boolean ov) {
         this.ov = ov;
     }
@@ -141,18 +210,38 @@ public class Flags {
     // Getter and Setter Methods: Parity Flag (P)
     // ==========================================
 
+    /**
+     * Checks if the Parity flag (P) is set.
+     *
+     * @return true if P is set, false otherwise
+     */
     public boolean isP() {
         return p;
     }
 
+    /**
+     * Descriptive alias to check if the Parity flag (P) is set.
+     *
+     * @return true if Parity flag is set, false otherwise
+     */
     public boolean isParity() {
         return p;
     }
 
+    /**
+     * Sets the Parity flag (P).
+     *
+     * @param p new value for the Parity flag
+     */
     public void setP(boolean p) {
         this.p = p;
     }
 
+    /**
+     * Descriptive alias to set the Parity flag (P).
+     *
+     * @param p new value for the Parity flag
+     */
     public void setParity(boolean p) {
         this.p = p;
     }
@@ -161,6 +250,12 @@ public class Flags {
     // String Representation
     // ==========================================
 
+    /**
+     * Returns a formatted string displaying the status of all CPU flags.
+     * Example: {@code Flags [CY=0, AC=0, OV=0, P=0]}
+     *
+     * @return String representation of the flags
+     */
     @Override
     public String toString() {
         return String.format("Flags [CY=%d, AC=%d, OV=%d, P=%d]",
