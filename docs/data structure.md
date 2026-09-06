@@ -6,16 +6,16 @@ Instruction: It gives command to the CPU.
  Example: Add two numbers
 
 Instruction set:
-Type  	Purpose  	  Example
+Type  	      |Purpose                                   |	  Example
 
-Data transfer  	Move data from one location to  another                                
-                                                                           
-	MOV
-Arithmetic	   Perform calculations   	ADD,DIV,SUBB
-Logical               	       Bitwise operations	XRL,CLR
-Branch control	Where instructions execute it will change the normal order work with individual bits	CALL,RAT
-Boolean         	Work with individual bits	CLR,CPL
-Machine control	This understand the process of  work then memorizing the name	NOP
+Data transfer | Move data from one location to  another  |	MOV
+Arithmetic	  | Perform calculations                     |	ADD,DIV,SUBB
+Logical       |        	       Bitwise operations	     | XRL,CLR
+Branch control|	Where instructions execute it will change
+               the normal order work with individual bits| CALL,RAT  
+Boolean       |  	Work with individual bits	         | CLR,CPL
+Machinecontrol|	This understand the process of  work 
+                      then memorizing the name	         |NOP
  
 GPIO (General purpose Input/Output):
 GPIO: It is the way that microcontroller communicates with external devices.
