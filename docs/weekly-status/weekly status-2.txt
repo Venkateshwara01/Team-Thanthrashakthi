@@ -2,11 +2,11 @@
           TEAM-THANTHRASHAKTHI: STC89C52 MICROCONTROLLER SIMULATOR
                   WEEK 2 SUBMISSION DOCUMENTATION REPORT
 
-Planned Work
-Start the basic implementation of the microcontroller simulator.
-Divide the work into CPU, Memory & Stack, Instructions, and UI.
-Implement and test the basic instruction execution flow.
-Connect all four modules into one working simulator. 
+## Planned Work
+### Start the basic implementation of the microcontroller simulator.
+### Divide the work into CPU, Memory & Stack, Instructions, and UI.
+### Implement and test the basic instruction execution flow.
+### Connect all four modules into one working simulator. 
 week2 work distribution.docx
 Completed Work
 Venkateshwara U D – Worked on the CPU foundation, including registers, PC, flags, and FETCH–DECODE–EXECUTE flow.
