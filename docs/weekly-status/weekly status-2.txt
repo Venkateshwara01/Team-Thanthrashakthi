@@ -1,0 +1,70 @@
+
+          TEAM-THANTHRASHAKTHI: STC89C52 MICROCONTROLLER SIMULATOR
+                  WEEK 2 SUBMISSION DOCUMENTATION REPORT
+
+PROJECT DETAILS:
+ Title: 8051 / STC89C52 Architecture & Instruction Pipeline Simulator
+ Milestone: Week 2 Implementation & Verification
+ Technology Stack: Java 8+ / Swing GUI / JUnit
+
+COMPLETED WORK (WEEK 2)
+
+Venkateshwara – CPU Implementation, Registers, Flags
+Built the CPU execution engine (`cpu` package) with a working 3-stage
+  FETCH -> DECODE -> EXECUTE pipeline.
+ Implemented Registers module (ACC, B, SP, PC, DPTR) with correct defaults.
+ Implemented Status Flags module (CY, AC, P, OV) with live recomputation.
+
+Fida – Memory Organization and Stack Mechanism
+ Implemented Memory Organization and Stack Mechanism.
+ Achieved 100% JUnit test pass rate across arithmetic, bitwise logic,
+  program flow, and stack bounds tests.
+
+Yathiksha – Instruction Set Implementation
+ Implemented and verified the mandatory 8-instruction core opcode set
+  (MOV, ADD, SUBB, ANL, INC, DEC, SJMP, END).
+
+Raif – UI Design and Simulation Controller
+ Built the Swing-based UI: assembly code editor, live pipeline trace panel,
+  register/flag dashboard, and control bar (Load/Step/Run All/Reset).
+ Coordinated the Simulation Controller linking UI actions to CPU execution.
+
+Team
+Ran and verified the end-to-end demonstration program, confirming correct
+  final register and flag state.
+
+
+PLANNED WORK (WEEK 3)
+
+Venkateshwara – CPU Implementation, Registers, Flags
+ Implement SFR address mapping (0x80-0xFF) for PSW, ACC, B, SP, and I/O
+  Ports (P0-P3).
+Implement a clock cycle timing model (1-cycle vs 2-cycle instructions).
+
+Fida – Memory Organization and Stack Mechanism
+ Map Register Banks (Bank 0-3, R0-R7) to RAM addresses 0x00-0x1F.
+
+Yathiksha – Instruction Set Implementation
+ Expand instruction set: JZ, JNZ, CJNE, DJNZ (branching) and PUSH, POP
+  (stack management).
+ Add Direct Addressing (e.g., MOV A, 30H) and Indirect Addressing via
+  pointer registers (e.g., MOV A, @R0).
+ Support text labels in assembly parsing for jump destinations.
+
+Raif – UI Design and Simulation Controller
+-Add an interactive 256-byte RAM grid viewer to the Swing UI.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
