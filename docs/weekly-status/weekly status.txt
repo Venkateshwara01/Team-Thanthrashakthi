@@ -1,0 +1,185 @@
+
+          TEAM-THANTHRASHAKTHI: STC89C52 MICROCONTROLLER SIMULATOR
+                  WEEK 2 SUBMISSION DOCUMENTATION REPORT
+
+PROJECT DETAILS:
+ Title: 8051 / STC89C52 Architecture & Instruction Pipeline Simulator
+ Milestone: Week 2 Implementation & Verification
+ Technology Stack: Java 8+ / Swing GUI / JUnit 5
+
+1. IMPLEMENTED INSTRUCTIONS
+
+The simulator fully supports the mandatory 8-instruction core set required for
+Week 2. Instructions are tokenized, parsed, and evaluated against registers
+and flags.
+
+
+ Mnemonic  Operands               Description & Operation                   
+
+ MOV       A, #imm / B, #imm /    Immediate load or register-to-register    
+          A, B / B, A            transfer into Accumulator or Register B.  
+ADD       A, B                   Addition: ACC = ACC + B. Recomputes CY,  
+                                  AC, and P flags.                          
+ SUBB     A, B                   Subtraction with Borrow: ACC = ACC - B -  
+                               CY. Recomputes CY and P flags.            
+ ANL       A, B                   Bitwise Logical AND: ACC = ACC AND B.     
+                                  Updates P flag based on result parity.    
+ INC       A                      Increments Accumulator by 1.              
+ DEC       A                      Decrements Accumulator by 1.              
+ SJMP      target                 Short Relative Jump to specified memory   
+                                  address. Updates Program Counter (PC).    
+ END       None                   Terminates CPU pipeline loop and 
+halts.   
+
+2. CPU IMPLEMENTATION STATUS
+
+The CPU execution engine is implemented in the `cpu` package and is fully 
+operational with modular separation across all team roles:
+
+ CPU Core (`src/cpu/CPU.java`): Coordinates the 3-stage pipeline cycle,
+  evaluates opcodes, and handles halt logic.
+Registers (`src/cpu/Registers.java`): Manages 8-bit registers (ACC, B, SP) 
+  and 16-bit registers (PC, DPTR). Initialized defaults: PC=0x0000, SP=0x07.
+ Status Flags (`src/cpu/Flags.java`): Implements 8051 Program Status Word 
+  (PSW) flags:
+   Carry Flag (CY): Tracks 8-bit unsigned overflow or borrow conditions.
+  -Auxiliary Carry (AC): Set when addition causes carry out of lower nibble.
+  - Parity Flag (P): Dynamically computed based on odd/even set bits in ACC.
+  - Overflow Flag (OV): Reserved for signed arithmetic operations.
+ System Verification: 100% test pass rate across JUnit unit tests covering 
+  arithmetic, bitwise logic, program flow, and stack bounds.
+
+
+3. FETCH -> DECODE -> EXECUTE DESIGN
+
+Execution follows a synchronous 3-stage pipeline architecture:
+
+[FETCH-> [DECODE-> [EXECUTE]
+Reads raw line at PC         Cleans comments, extracts     Executes ALU operation,
+from ProgramMemory.          mnemonic & operands.          updates Regs & Flags,
+                                                           advances PC.
+
+ Stage 1: FETCH (`cpu.CPU` & `memory.ProgramMemory`)
+  Retrieves the instruction string indexed at current PC from Program Memory.
+  Checks boundary conditions prior to decoding.
+
+ Stage 2: DECODE (`instruction.Instruction` & `instruction.InstructionSet`)
+  Strips inline comments (`;`), trims whitespace, tokenizes mnemonic vs. 
+  operands, and validates mnemonic against the supported opcode table.
+
+ Stage 3: EXECUTE (`cpu.CPU`, `cpu.Registers`, & `cpu.Flags`)
+  Executes the decoded instruction via switch-case routing, updates target 
+  registers, recomputes PSW status flags, and increments PC (or loads jump
+  target address if SJMP).
+
+
+4. UI FUNCTIONALITY
+Built using Java Swing (`src/ui/SimulatorUI.java`) and coordinated by 
+`SimulationController`, the GUI features four functional areas:
+
+1. Assembly Code Editor (Left Panel): Multi-line text region for authoring 
+   and editing assembly scripts. Pre-loaded with demo script on startup.
+2. Pipeline Trace Panel (Center Panel): Live scrolling log rendering step-by-
+   step FETCH -> DECODE -> EXECUTE progress along with register delta traces.
+3. Register & Flag Dashboard (Right Panel): Real-time hexadecimal display of
+   PC, ACC, B, SP, DPTR, and Boolean flag states (CY, AC, OV, P).
+4. Control Bar (Bottom Panel):
+   - [Load Program]: Parses editor text and loads clean code into memory.
+   - [Step]: Advances execution by a single pipeline instruction step.
+   - [Run All]: Runs continuous stepping until END instruction or breakpoint.
+   - [Reset Simulator]: Restores default register states and clears trace logs.
+
+5. DEMONSTRATION PROGRAM
+
+Assembly Script (`programs/demo-program.txt`):
+  MOV A, #50     ; ACC = 0x32 (50)
+  MOV B, #30     ; B   = 0x1E (30)
+  ADD A, B       ; ACC = 0x32 + 0x1E = 0x50 (80), AC = true
+  INC A          ; ACC = 0x50 + 1 = 0x51
+  ANL A, B       ; ACC = 0x51 AND 0x1E = 0x10 (16), P = true
+  END            ; Halt CPU
+
+Step-by-Step Execution Output:
+ Step  Instruction  | PC (Pre)  | ACC Output | B Output  | Flag State         
+
+ 1     MOV A, #50    0x0000     0x32        0x00       CY:0 AC:0 OV:0 P:0 
+ 2     MOV B, #30    0x0001     0x32       0x1E       CY:0 AC:0 OV:0 P:0 
+ 3     ADD A, B      0x0002     0x50        0x1E       CY:0 AC:1 OV:0 P:0 
+ 4     INC A         0x0003     0x51        0x1E       CY:0 AC:1 OV:0 P:0 
+ 5     ANL A, B      0x0004     0x10        0x1E       CY:0 AC:1 OV:0 P:1 
+ 6     END          0x0005     0x10        0x1E       [HALTED]           
+
+Final State Verification:
+ PC: 0x0005 | ACC: 0x10 | B: 0x1E | SP: 0x07 | DPTR: 0x0000
+Flags: CY: false | AC: true | OV: false | P: true (PASS)
+ 
+
+
+
+
+
+
+
+
+
+COMPLETED WORK (WEEK 2)
+
+Venkateshwara – CPU Implementation, Registers, Flags
+Built the CPU execution engine (`cpu` package) with a working 3-stage
+  FETCH -> DECODE -> EXECUTE pipeline.
+ Implemented Registers module (ACC, B, SP, PC, DPTR) with correct defaults.
+ Implemented Status Flags module (CY, AC, P, OV) with live recomputation.
+
+Fida – Memory Organization and Stack Mechanism
+ Implemented Memory Organization and Stack Mechanism.
+ Achieved 100% JUnit test pass rate across arithmetic, bitwise logic,
+  program flow, and stack bounds tests.
+
+Yathiksha – Instruction Set Implementation
+ Implemented and verified the mandatory 8-instruction core opcode set
+  (MOV, ADD, SUBB, ANL, INC, DEC, SJMP, END).
+
+Raif – UI Design and Simulation Controller
+ Built the Swing-based UI: assembly code editor, live pipeline trace panel,
+  register/flag dashboard, and control bar (Load/Step/Run All/Reset).
+ Coordinated the Simulation Controller linking UI actions to CPU execution.
+
+Team
+Ran and verified the end-to-end demonstration program, confirming correct
+  final register and flag state.
+
+
+PLANNED WORK (WEEK 3)
+
+Venkateshwara – CPU Implementation, Registers, Flags
+ Implement SFR address mapping (0x80-0xFF) for PSW, ACC, B, SP, and I/O
+  Ports (P0-P3).
+Implement a clock cycle timing model (1-cycle vs 2-cycle instructions).
+
+Fida – Memory Organization and Stack Mechanism
+ Map Register Banks (Bank 0-3, R0-R7) to RAM addresses 0x00-0x1F.
+
+Yathiksha – Instruction Set Implementation
+ Expand instruction set: JZ, JNZ, CJNE, DJNZ (branching) and PUSH, POP
+  (stack management).
+ Add Direct Addressing (e.g., MOV A, 30H) and Indirect Addressing via
+  pointer registers (e.g., MOV A, @R0).
+ Support text labels in assembly parsing for jump destinations.
+
+Raif – UI Design and Simulation Controller
+-Add an interactive 256-byte RAM grid viewer to the Swing UI.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
