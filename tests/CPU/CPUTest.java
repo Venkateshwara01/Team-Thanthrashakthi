@@ -67,4 +67,22 @@ public class CPUTest {
         cpu.fetch(); cpu.decode(); cpu.execute();
         assertTrue(cpu.isHalted());
     }
+
+    @Test
+    @DisplayName("TC07: PUSH & POP Instructions")
+    public void testPushAndPop() {
+        cpu.loadProgram(Arrays.asList("MOV A, #55", "PUSH A", "MOV A, #00", "POP A"));
+        for (int i = 0; i < 4; i++) { cpu.fetch(); cpu.decode(); cpu.execute(); }
+        assertEquals(0x55, cpu.getRegisters().getAcc());
+        assertEquals(0x07, cpu.getRegisters().getSp());
+    }
+
+    @Test
+    @DisplayName("TC08: ENQ & DEQ Instructions")
+    public void testEnqAndDeq() {
+        cpu.loadProgram(Arrays.asList("MOV A, #99", "ENQ A", "MOV A, #00", "DEQ"));
+        for (int i = 0; i < 4; i++) { cpu.fetch(); cpu.decode(); cpu.execute(); }
+        assertEquals(0x63, cpu.getRegisters().getAcc());
+        assertTrue(cpu.getFifoQueue().isEmpty());
+    }
 }

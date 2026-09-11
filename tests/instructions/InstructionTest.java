@@ -1,4 +1,4 @@
-package tests.instruction;
+package tests.instructions;
 
 import instruction.Instruction;
 import org.junit.jupiter.api.Test;

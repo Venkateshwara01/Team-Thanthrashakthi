@@ -2,11 +2,17 @@ package cpu;
 
 import instruction.Instruction;
 import memory.ProgramMemory;
+import memory.DataMemory;
+import memory.FifoQueue;
+import memory.Stack;
 
 public class CPU {
     private final Registers registers = new Registers();
     private final Flags flags = new Flags();
     private final ProgramMemory memory = new ProgramMemory();
+    private final DataMemory dataMemory = new DataMemory();
+    private final Stack stack = new Stack(dataMemory);
+    private final FifoQueue fifoQueue = new FifoQueue(8); // 8-element capacity queue
 
     private Instruction currentInstruction;
     private boolean halted = false;
@@ -19,6 +25,8 @@ public class CPU {
     public void reset() {
         registers.reset();
         flags.reset();
+        dataMemory.reset();
+        fifoQueue.reset();
         halted = false;
         currentInstruction = null;
     }
@@ -62,6 +70,13 @@ public class CPU {
                 } else if (op1.equals("B") && op2.startsWith("#")) {
                     int val = parseVal(op2);
                     registers.setB(val);
+                } else if (op1.equals("A") && op2.startsWith("0X")) {
+                    int addr = parseVal(op2);
+                    registers.setAcc(dataMemory.read(addr));
+                    flags.updateParity(registers.getAcc());
+                } else if (op1.startsWith("0X") && op2.equals("A")) {
+                    int addr = parseVal(op1);
+                    dataMemory.write(addr, registers.getAcc());    
                 } else if (op1.equals("A") && op2.equals("B")) {
                     registers.setAcc(registers.getB());
                     flags.updateParity(registers.getAcc());
@@ -103,6 +118,38 @@ public class CPU {
                     flags.updateParity(registers.getAcc());
                 }
                 break;
+            case "PUSH":
+                int valToPush = op1.equals("A") ? registers.getAcc() : parseVal(op1);
+                registers.setSp(stack.push(registers.getSp(), valToPush));
+                break;
+
+            case "POP":
+                int[] popped = new int[1];
+                registers.setSp(stack.pop(registers.getSp(), popped));
+                if (op1.equals("A")) {
+                    registers.setAcc(popped[0]);
+                    flags.updateParity(registers.getAcc());
+                } else if (op1.equals("B")) {
+                    registers.setB(popped[0]);
+                }
+                break;
+
+            case "ENQ":
+                int enqVal = op1.equals("A") ? registers.getAcc() : parseVal(op1);
+                boolean success = fifoQueue.enqueue(enqVal);
+                flags.setCy(!success); // Overflow sets Carry Flag
+                break;
+
+            case "DEQ":
+                int deqVal = fifoQueue.dequeue();
+                if (deqVal == -1) {
+                    flags.setCy(true); // Underflow sets Carry Flag
+                } else {
+                    flags.setCy(false);
+                    registers.setAcc(deqVal);
+                    flags.updateParity(registers.getAcc());
+                }
+                break;    
 
             case "SJMP":
                 int target = parseVal(op1);
@@ -136,5 +183,7 @@ public class CPU {
     public Registers getRegisters() { return registers; }
     public Flags getFlags() { return flags; }
     public ProgramMemory getMemory() { return memory; }
+    public DataMemory getDataMemory() { return dataMemory; }
+    public FifoQueue getFifoQueue() { return fifoQueue; }
     public boolean isHalted() { return halted; }
 }
