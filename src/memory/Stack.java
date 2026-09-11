@@ -1,20 +1,21 @@
 package memory;
 
 public class Stack {
-    private final int[] ram = new int[256];
-    private int sp = 0x07;
+   private final DataMemory dataMemory;
 
-    public void push(int value) {
+    public Stack(DataMemory dataMemory) {
+        this.dataMemory = dataMemory;
+    }
+
+    public int push(int sp, int value) {
         sp = (sp + 1) & 0xFF;
-        ram[sp] = value & 0xFF;
+        dataMemory.write(sp, value);
+        return sp;
     }
 
-    public int pop() {
-        int val = ram[sp];
+    public int pop(int sp, int[] poppedValueOut) {
+        poppedValueOut[0] = dataMemory.read(sp);
         sp = (sp - 1) & 0xFF;
-        return val;
+        return sp;
     }
-
-    public int getSp() { return sp; }
-    public void setSp(int sp) { this.sp = sp & 0xFF; }
 }

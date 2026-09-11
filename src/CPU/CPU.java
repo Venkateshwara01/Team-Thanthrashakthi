@@ -1,9 +1,9 @@
 package cpu;
 
 import instruction.Instruction;
-import memory.ProgramMemory;
 import memory.DataMemory;
 import memory.FifoQueue;
+import memory.ProgramMemory;
 import memory.Stack;
 
 public class CPU {
@@ -169,8 +169,8 @@ public class CPU {
             registers.setPc(prevPC + 1);
         }
 
-        return String.format("EXECUTE ✓\n  Before: %s\n  After : %s\n  Flags : %s",
-                stateBefore, registers.toString(), flags.toString());
+        return String.format("EXECUTE ✓\n  Before: %s\n  After : %s\n  Queue : %s",
+                stateBefore, registers.toString(), fifoQueue.toString());
     }
 
     private int parseVal(String str) {
