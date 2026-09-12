@@ -6,7 +6,7 @@ import cpu.Registers;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 public class SimulatorUI extends JFrame {
@@ -71,7 +71,7 @@ public class SimulatorUI extends JFrame {
 
         for (JLabel lbl : Arrays.asList(pcLabel, accLabel, bLabel, spLabel, dptrLabel, flagsLabel, queueLabel)) {
             lbl.setFont(new Font("Monospaced", Font.BOLD, 12));
-            rightPanel.add(lbl);
+            regPanel.add(lbl);
         }
          rightPanel.add(regPanel, BorderLayout.NORTH);
         
