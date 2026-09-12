@@ -6,7 +6,7 @@ import cpu.Registers;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 public class SimulatorUI extends JFrame {
