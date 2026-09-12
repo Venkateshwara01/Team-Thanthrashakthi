@@ -71,7 +71,7 @@ public class SimulatorUI extends JFrame {
 
         for (JLabel lbl : Arrays.asList(pcLabel, accLabel, bLabel, spLabel, dptrLabel, flagsLabel, queueLabel)) {
             lbl.setFont(new Font("Monospaced", Font.BOLD, 12));
-            rightPanel.add(lbl);
+            regPanel.add(lbl);
         }
          rightPanel.add(regPanel, BorderLayout.NORTH);
         
