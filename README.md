@@ -17,7 +17,8 @@
 
 ## Microcontroller being simulated:SCT89C52
 
-## Team Members: Venkateshwara U D - 25190152
+## Team Members:
+              Venkateshwara U D - 25190152
               Zainaba Fidha K N - 25190155
               Yathiksha U S - 25190153
               Raaif Abdul Haamid - 25190140
