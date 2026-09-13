@@ -13,14 +13,14 @@ It follows the First-In, First-Out (FIFO) principle, meaning the first value add
 |ENQ A             	| Adds the value currently stored in the Accumulator (ACC) to the back of the queue           |
 |DEQ                |	Removes the value from the front of the queue and places it back into the Accumulator (ACC) |
 
-### 3. Error Protection
+## 3. Error Protection
 
 The queue includes protection against invalid operations:
 
 - Full Queue: The queue can store a maximum of 3 values. If an attempt is made to add a 4th value, the addition is safely blocked.
 - Empty Queue: If an attempt is made to remove a value when the queue is empty, the operation is safely stopped without causing the simulator to crash.
 
-### 4. Proof of Work – Console Output
+## 4. Proof of Work – Console Output
 
 The following execution demonstrates how the queue works:
 
@@ -40,15 +40,16 @@ The following execution demonstrates how the queue works:
 
 This confirms that the queue follows the FIFO ordering principle.
 
-### 5. Unit Test Results
+## 5. Unit Test Results
 
 All three queue-related tests were successfully passed:
 
-Test	Result
-testQueueOrdering	PASS
-testQueueOverflowAndUnderflow	PASS
-testCpuQueueExecution	PASS
+|Test	                                                   |   Result |
+|--------------------------------------------------------|----------|
+|testQueueOrdering                                       |  	PASS   |
+|testQueueOverflowAndUnderflow                           |  	PASS   |
+|testCpuQueueExecution	                                  |   PASS   |
 
-Overall Result: 3/3 Queue Tests Passed (100%)
+### Overall Result: 3/3 Queue Tests Passed (100%)
 
 The successful tests verify queue ordering, overflow and underflow protection, and queue instruction execution through the CPU.
