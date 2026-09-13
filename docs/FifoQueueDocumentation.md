@@ -30,11 +30,3 @@ The following execution demonstrates how the queue works:
 4. ENQ A       --> ACC = 0x14 | Queue = [0x0A, 0x14]
 5. DEQ         --> ACC = 0x0A | Queue = [0x14]
    
-### Execution Explanation
-- MOV A, #10 loads the value 10 into the Accumulator.
-- ENQ A adds 0x0A to the queue.
-- MOV A, #20 changes the Accumulator value to 20 (0x14).
-- ENQ A adds 0x14 after 0x0A.
-- DEQ removes the first value (0x0A) and places it back into the Accumulator.
-
-This confirms that the queue follows the FIFO ordering principle.
