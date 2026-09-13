@@ -1,4 +1,5 @@
-# Team-ThanthrashakthiProject title: Educational 8-bit Microcontroller Simulator with Process scheduling
+# Team-ThanthrashakthiProject title:
+## Educational 8-bit Microcontroller Simulator with Process scheduling
 
 ## Problem Objective: To create a simple simulator for the STC89C52 microcontroller that shows how  instructions are executed, how memory and peripherals works  , and how multiple programs are managed by the CPU using different scheduling methods.
 
