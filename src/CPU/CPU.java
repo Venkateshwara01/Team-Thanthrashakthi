@@ -6,7 +6,7 @@ import memory.FifoQueue;
 import memory.ProgramMemory;
 import memory.Stack;
 
-public class CPU {
+public class cpu {
     private final Registers registers = new Registers();
     private final Flags flags = new Flags();
     private final ProgramMemory memory = new ProgramMemory();

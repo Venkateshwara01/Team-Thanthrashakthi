@@ -11,11 +11,11 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CPUTest {
-    private CPU cpu;
+    private cpu cpu;
 
     @BeforeEach
     public void setUp() {
-        cpu = new CPU();
+        cpu = new cpu();
         cpu.reset();
     }
 

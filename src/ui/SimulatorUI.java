@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SimulatorUI extends JFrame {
-    private final CPU cpu = new CPU();
+    private final cpu cpu = new cpu();
     private final SimulationController controller = new SimulationController(cpu);
 
     private JTextArea codeArea;
