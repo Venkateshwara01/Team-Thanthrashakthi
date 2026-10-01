@@ -14,7 +14,7 @@ public class StackTest {
     @BeforeEach
     public void setUp() {
         dataMemory = new DataMemory();
-        stack = new Stack();
+        stack = new Stack(dataMemory);
     }
 
     @Test

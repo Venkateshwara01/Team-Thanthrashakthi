@@ -17,14 +17,14 @@ public class AllTests {
     private DataMemory dataMemory;
     private Stack stack;
     private FifoQueue queue;
-    private cpu cpu;
+    private CPU cpu;
 
     @BeforeEach
     public void setUp() {
         dataMemory = new DataMemory();
         stack = new Stack(dataMemory);
         queue = new FifoQueue(3);
-        cpu = new cpu();
+        cpu = new CPU();
     }
 
     // ==========================================

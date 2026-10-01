@@ -4,9 +4,9 @@ import cpu.CPU;
 import java.util.List;
 
 public class SimulationController {
-    private final cpu cpu;
+    private final CPU cpu;
 
-    public SimulationController(cpu cpu) {
+    public SimulationController(CPU cpu) {
         this.cpu = cpu;
     }
 
@@ -32,7 +32,7 @@ public class SimulationController {
         return cpu.isHalted();
     }
 
-    public cpu getCpu() {
+    public CPU getCpu() {
         return cpu;
     }
 }
