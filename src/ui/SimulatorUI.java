@@ -72,11 +72,10 @@ public class SimulatorUI extends JFrame {
         // Control Buttons
         JPanel btnPanel = new JPanel(new GridLayout(2, 1, 5, 5));
 
-        JPanel btnPanel = new JPanel(new GridLayout(1, 4, 5, 5));
-        JButton loadBtn = new JButton("LOAD");
-        JButton resetBtn = new JButton("RESET");
-        JButton stepBtn = new JButton("STEP");
-        JButton runBtn = new JButton("RUN");
+        loadBtn = new JButton("LOAD");
+        resetBtn = new JButton("RESET");
+        stepBtn = new JButton("STEP");
+        runBtn = new JButton("RUN");
 
         btnPanel.add(loadBtn); btnPanel.add(resetBtn);
         btnPanel.add(stepBtn); btnPanel.add(runBtn);
@@ -90,9 +89,14 @@ public class SimulatorUI extends JFrame {
         speedSlider.setPaintLabels(true);
         speedPanel.add(speedSlider, BorderLayout.CENTER);
 
+        JPanel controlContainer = new JPanel();
+        controlContainer.setLayout(new BoxLayout(controlContainer, BoxLayout.Y_AXIS));
+
+        
         controlContainer.add(btnPanel);
         controlContainer.add(speedPanel);
         leftPanel.add(controlContainer, BorderLayout.SOUTH);
+
         
         // Center Panel: Execution Trace
         JPanel centerPanel = new JPanel(new BorderLayout(5, 5));
