@@ -58,3 +58,24 @@
 [2026-10-07 00:10:21] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x000A | ACC: 0x14 | B: 0x00 | SP: 0x09 | DPTR: 0x0000 |   After : PC: 0x000B | ACC: 0x14 | B: 0x14 | SP: 0x08 | DPTR: 0x0000 |   Queue : [0x1E]
 [2026-10-07 00:10:21] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x000B | ACC: 0x14 | B: 0x14 | SP: 0x08 | DPTR: 0x0000 |   After : PC: 0x000C | ACC: 0x0A | B: 0x14 | SP: 0x07 | DPTR: 0x0000 |   Queue : [0x1E]
 [2026-10-07 00:10:22] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x000C | ACC: 0x0A | B: 0x14 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x000C | ACC: 0x0A | B: 0x14 | SP: 0x07 | DPTR: 0x0000 |   Queue : [0x1E]
+[2026-10-15 10:55:46] [CORE] Connected to Logging Process.
+[2026-10-15 10:56:56] [CORE] Program loaded into CPU Program Memory.
+[2026-10-15 10:57:16] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x0000 | ACC: 0x00 | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x0001 | ACC: 0x0A | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   Queue : []
+[2026-10-15 10:57:41] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x0001 | ACC: 0x0A | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x0002 | ACC: 0x0A | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   Queue : [0x0A]
+[2026-10-15 10:57:42] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x0002 | ACC: 0x0A | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x0003 | ACC: 0x14 | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   Queue : [0x0A]
+[2026-10-15 10:57:42] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x0003 | ACC: 0x14 | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x0004 | ACC: 0x14 | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   Queue : [0x0A, 0x14]
+[2026-10-15 10:57:43] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x0004 | ACC: 0x14 | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x0005 | ACC: 0x1E | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   Queue : [0x0A, 0x14]
+[2026-10-15 10:57:43] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x0005 | ACC: 0x1E | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x0006 | ACC: 0x1E | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   Queue : [0x0A, 0x14, 0x1E]
+[2026-10-15 10:57:44] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x0006 | ACC: 0x1E | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x0007 | ACC: 0x0A | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   Queue : [0x14, 0x1E]
+[2026-10-15 10:57:44] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x0007 | ACC: 0x0A | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x0008 | ACC: 0x0A | B: 0x00 | SP: 0x08 | DPTR: 0x0000 |   Queue : [0x14, 0x1E]
+[2026-10-15 10:57:45] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x0008 | ACC: 0x0A | B: 0x00 | SP: 0x08 | DPTR: 0x0000 |   After : PC: 0x0009 | ACC: 0x14 | B: 0x00 | SP: 0x08 | DPTR: 0x0000 |   Queue : [0x1E]
+[2026-10-15 10:57:45] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x0009 | ACC: 0x14 | B: 0x00 | SP: 0x08 | DPTR: 0x0000 |   After : PC: 0x000A | ACC: 0x14 | B: 0x00 | SP: 0x09 | DPTR: 0x0000 |   Queue : [0x1E]
+[2026-10-15 10:57:46] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x000A | ACC: 0x14 | B: 0x00 | SP: 0x09 | DPTR: 0x0000 |   After : PC: 0x000B | ACC: 0x14 | B: 0x14 | SP: 0x08 | DPTR: 0x0000 |   Queue : [0x1E]
+[2026-10-15 10:57:46] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x000B | ACC: 0x14 | B: 0x14 | SP: 0x08 | DPTR: 0x0000 |   After : PC: 0x000C | ACC: 0x0A | B: 0x14 | SP: 0x07 | DPTR: 0x0000 |   Queue : [0x1E]
+[2026-10-15 10:57:47] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x000C | ACC: 0x0A | B: 0x14 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x000C | ACC: 0x0A | B: 0x14 | SP: 0x07 | DPTR: 0x0000 |   Queue : [0x1E]
+[2026-10-15 13:56:15] [CORE] Connected to Logging Process.
+[2026-10-15 22:06:07] [CORE] Connected to Logging Process.
+[2026-10-15 22:07:28] [CORE] Connected to Logging Process.
+[2026-10-15 22:10:07] [CORE] Connected to Logging Process.
+[2026-10-15 22:22:19] [CORE] Connected to Logging Process.
+[2026-10-15 22:25:28] [CORE] Connected to Logging Process.
