@@ -57,7 +57,8 @@ public class CPUTest {
     public void testAnl() {
         cpu.loadProgram(Arrays.asList("MOV A, #51", "MOV B, #30", "ANL A, B"));
         for (int i = 0; i < 3; i++) { cpu.fetch(); cpu.decode(); cpu.execute(); }
-        assertEquals(0x10, cpu.getRegisters().getAcc());
+        assertEquals(0x12, cpu.getRegisters().getAcc());
+        assertFalse(cpu.getFlags().isCy());
     }
 
     @Test
@@ -71,7 +72,7 @@ public class CPUTest {
     @Test
     @DisplayName("TC07: PUSH & POP Instructions")
     public void testPushAndPop() {
-        cpu.loadProgram(Arrays.asList("MOV A, #55", "PUSH A", "MOV A, #00", "POP A"));
+        cpu.loadProgram(Arrays.asList("MOV A, #55H", "PUSH A", "MOV A, #00", "POP A"));
         for (int i = 0; i < 4; i++) { cpu.fetch(); cpu.decode(); cpu.execute(); }
         assertEquals(0x55, cpu.getRegisters().getAcc());
         assertEquals(0x07, cpu.getRegisters().getSp());
@@ -80,9 +81,9 @@ public class CPUTest {
     @Test
     @DisplayName("TC08: ENQ & DEQ Instructions")
     public void testEnqAndDeq() {
-        cpu.loadProgram(Arrays.asList("MOV A, #99", "ENQ A", "MOV A, #00", "DEQ"));
+        cpu.loadProgram(Arrays.asList("MOV A, #99H", "ENQ A", "MOV A, #00", "DEQ"));
         for (int i = 0; i < 4; i++) { cpu.fetch(); cpu.decode(); cpu.execute(); }
-        assertEquals(0x63, cpu.getRegisters().getAcc());
+        assertEquals(0x99, cpu.getRegisters().getAcc());
         assertTrue(cpu.getFifoQueue().isEmpty());
     }
 }
