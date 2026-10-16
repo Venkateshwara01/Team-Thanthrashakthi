@@ -51,7 +51,9 @@ public class SimulatorUI extends JFrame {
         new Thread(() -> {
             try {
                 Socket socket = new Socket(CORE_HOST, CORE_PORT);
+                socket.setSoTimeout(5000); // 5-second read timeout protection
                 outToCore = new ObjectOutputStream(socket.getOutputStream());
+                outToCore.flush(); // Flush header streams
                 inFromCore = new ObjectInputStream(socket.getInputStream());
                 SwingUtilities.invokeLater(() -> traceArea.setText("Connected to Core Process successfully.\nPress LOAD, STEP, or RUN."));
             } catch (Exception e) {
@@ -211,6 +213,8 @@ public class SimulatorUI extends JFrame {
             stopAutoRun();
             return;
         }
+        // Disable control buttons during active transmission to prevent packet overlap
+        setControlsEnabled(false);
 
         new Thread(() -> {
             try {
@@ -219,12 +223,28 @@ public class SimulatorUI extends JFrame {
                 outToCore.flush();
 
                 IPCMessage response = (IPCMessage) inFromCore.readObject();
-                SwingUtilities.invokeLater(() -> updateDisplay(response.getStateSnapshot()));
+                SwingUtilities.invokeLater(() -> {
+                    updateDisplay(response.getStateSnapshot());
+                    setControlsEnabled(true);
+                });
             } catch (Exception ex) {
                 ex.printStackTrace();
-                SwingUtilities.invokeLater(this::stopAutoRun);
+                SwingUtilities.invokeLater(() -> {
+                    JOptionPane.showMessageDialog(this, "Core communication error: " + ex.getMessage());
+                    stopAutoRun();
+                    setControlsEnabled(true);
+                });
             }
         }).start();
+    }
+    // Helper method to toggle button availability safely
+    private void setControlsEnabled(boolean enabled) {
+        if (!isRunning) {
+            loadBtn.setEnabled(enabled);
+            resetBtn.setEnabled(enabled);
+            stepBtn.setEnabled(enabled);
+        }
+        runBtn.setEnabled(enabled);
     }
 
      private void updateDisplay(SystemStateSnapshot snap) {
