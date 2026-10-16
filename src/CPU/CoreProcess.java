@@ -48,8 +48,9 @@ public class CoreProcess {
         try (ServerSocket serverSocket = new ServerSocket(CORE_PORT)) {
             System.out.println("[CORE PROCESS] Listening for UI commands on port " + CORE_PORT);
             Socket clientSocket = serverSocket.accept();
-            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
+            out.flush();
+            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
 
             while (true) {
                 IPCMessage msg = (IPCMessage) in.readObject();
