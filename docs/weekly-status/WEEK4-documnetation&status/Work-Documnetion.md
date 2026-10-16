@@ -24,6 +24,11 @@ To ensure type-safe and consistent communication across process boundaries, the 
 * **`IPCMessage` (Serializable Payload):** Container encapsulating commands, raw program line lists, system state snapshots, and log text across socket streams.
 * **`SystemStateSnapshot` (Serializable State):** Captures real-time CPU registers (`pc`, `acc`, `b`, `sp`, `dptr`), flags, execution queues, halt status, and RAM snippets.
 
+## Process Architecture 
+![simulator_three_process_block_diagram](/Images/simulator_three_process_block_diagram.png)
+
+## Core Internal Arechitecture
+![simulator_three_process_block_diagram](/Images/core_process_internal_block_diagram.png)
 
 ## 5. Standalone vs. Multi-Process Comparison
 
