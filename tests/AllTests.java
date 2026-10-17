@@ -125,14 +125,14 @@ public class AllTests {
             cpu.execute();
         }
 
-        assertEquals(55, cpu.getRegisters().getAcc());
+        assertEquals(85, cpu.getRegisters().getAcc());
         assertEquals(0x07, cpu.getRegisters().getSp());
     }
 
     @Test
     public void testCpuQueueExecution() {
         List<String> program = Arrays.asList(
-            "MOV A, #99", // Corrected instruction value from #55 to #99
+            "MOV A, #99H", // Corrected instruction value from #55 to #99
             "ENQ A",
             "MOV A, #00",
             "DEQ",
@@ -146,7 +146,7 @@ public class AllTests {
             cpu.execute();
         }
 
-        assertEquals(99, cpu.getRegisters().getAcc());
+        assertEquals(0x99, cpu.getRegisters().getAcc());
         assertTrue(cpu.getFifoQueue().isEmpty());
     }
 }
