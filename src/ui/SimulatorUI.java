@@ -1,18 +1,17 @@
 package ui;
 
-import shared.CommandType;
-import shared.IPCMessage;
-import shared.SystemStateSnapshot;
-
-import javax.swing.*;
-import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
+import shared.CommandType;
+import shared.IPCMessage;
+import shared.SystemStateSnapshot;
 
 public class SimulatorUI extends JFrame {
     private static final String CORE_HOST = "127.0.0.1";
