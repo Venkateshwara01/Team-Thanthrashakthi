@@ -59,10 +59,27 @@ graph TD
 ## Week 2 – Initial simulator development
 - Implement STC89C52 CPU structure.
 - Implement registers, PC, flags, and instruction cycle.
+- Implement the required instruction subset with lookup and execution.
+- Initial implemented 8 instructions.
 ## Week 3 –  Memory, Stack and queue
-- Implement the required instruction subset.
-- Implement instruction lookup and execution.
-- Test CPU operations.
+- Implement program memory (ROM) and data memory (RAM).
+- Implement stack with PUSH,POP and stack pointer handling.
+- Implement queue for managing instructions and processes.
+- Test memory,stack and queue operations.
 ## Week 4 – Process communication and process intergration
-- Implementation of process
--  UI process , core process and logging
+- Implementation process creation and inter-process communication.
+- Intergrate the CPU,memory,stack and queue modules.
+- Develop the UI process , core process and logging.
+-  Test the full simulator end to end.
+
+## Compilation and Execution
+## for compile
+- javac -d bin (Get-ChildItem -Path src -Recurse -Filter *.java | Select-Object -ExpandProperty FullName)
+## 1st terminal
+- java -cp bin logging.LoggingProcess
+## 2nd terminal
+- java -cp bin cpu.CoreProcess
+## 3rd terminal 
+- java -cp bin ui.SimulatorUI 
+## logging
+-  Get-Content simulation.log
