@@ -52,17 +52,17 @@ graph TD
 ```
 
 ## Initial development plan:
-## Week 1 – Project Setup
+## Week 1 – Project Setup and planning
 - Finalize project requirements and architecture.
 - Set up Java project and GitHub repository.
 - Define team responsibilities.
-## Week 2 – CPU & Registers
+## Week 2 – Initial simulator development
 - Implement STC89C52 CPU structure.
 - Implement registers, PC, flags, and instruction cycle.
-## Week 3 – Instruction Execution
+## Week 3 –  Memory, Stack and queue
 - Implement the required instruction subset.
 - Implement instruction lookup and execution.
 - Test CPU operations.
-## Week 4 – Memory & Stack
+## Week 4 – Process communication and process intergration
 - Implementation of process
 -  UI process , core process and logging
