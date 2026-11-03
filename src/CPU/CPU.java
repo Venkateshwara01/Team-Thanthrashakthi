@@ -111,6 +111,18 @@ public class CPU {
                     flags.updateParity(registers.getAcc());
                 }
                 break;
+            
+            case "XRL":
+            case "XOR":
+                if (op1.equals("A") && op2.equals("B")) {
+                    registers.setAcc(registers.getAcc() ^ registers.getB());
+                    flags.updateParity(registers.getAcc());
+                } else if (op1.equals("A") && op2.startsWith("#")) {
+                    int val = parseVal(op2);
+                    registers.setAcc(registers.getAcc() ^ val);
+                    flags.updateParity(registers.getAcc());
+                }
+                break;
 
             case "INC":
                 if (op1.equals("A")) {
