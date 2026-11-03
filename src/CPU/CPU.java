@@ -169,6 +169,14 @@ public class CPU {
                 jumpTaken = true;
                 break;
 
+            case "JC":
+                if (flags.isCy()) {
+                target = parseVal(op1);
+                registers.setPc(target);
+                jumpTaken = true;
+                }
+                break;
+
             case "END":
                 halted = true;
                 break;

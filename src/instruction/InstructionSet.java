@@ -5,7 +5,7 @@ import java.util.List;
 
 public class InstructionSet {
     public static final List<String> SUPPORTED = Arrays.asList(
-        "MOV", "ADD", "SUBB", "ANL", "XOR", "XRL", "INC", "SJMP","PUSH", "POP", "ENQ", "DEQ", "END"
+        "MOV", "ADD", "SUBB", "ANL", "XOR", "XRL", "INC", "SJMP","PUSH", "POP", "ENQ", "DEQ", "JC", "END"
     );
 
     public static boolean isSupported(String mnemonic) {
