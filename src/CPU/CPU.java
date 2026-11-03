@@ -61,6 +61,8 @@ public class CPU {
         int prevPC = registers.getPc();
         boolean jumpTaken = false;
 
+        System.out.println("DEBUG MNEMONIC=[" + mnemonic + "] OP1=[" + op1 + "]");
+
         switch (mnemonic) {
             case "MOV":
                 if (op1.equals("A") && op2.startsWith("#")) {
