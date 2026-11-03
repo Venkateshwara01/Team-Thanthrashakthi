@@ -45,7 +45,7 @@ public class CPU {
             return "DECODE: No active instruction or CPU Halted.";
         }
         return String.format("DECODE ✓ [Mnemonic: %s | Op1: %s | Op2: %s]",
-                currentInstruction.getMnemonic(), currentInstruction.getOperand1(), currentInstruction.getOperand2());
+                currentInstruction.getMnemonic().trim().toUpperCase(), currentInstruction.getOperand1(), currentInstruction.getOperand2());
     }
 
     public String execute() {
@@ -54,7 +54,7 @@ public class CPU {
         }
 
         String stateBefore = registers.toString();
-        String mnemonic = currentInstruction.getMnemonic();
+        String mnemonic = currentInstruction.getMnemonic().trim().toUpperCase();
         String op1 = currentInstruction.getOperand1();
         String op2 = currentInstruction.getOperand2();
 
