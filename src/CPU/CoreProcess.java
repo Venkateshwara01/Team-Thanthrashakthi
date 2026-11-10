@@ -53,11 +53,24 @@ public class CoreProcess {
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
 
             while (true) {
+                try{
                 IPCMessage msg = (IPCMessage) in.readObject();
                 SystemStateSnapshot snap = handleUICommand(msg);
                 
                 out.writeObject(new IPCMessage(msg.getCommand(), null, snap, null));
                 out.flush();
+                }catch (Exception innerEx) {
+                    System.err.println("[CORE IPC WARNING] " + innerEx.getMessage());
+                    
+                    // Create an error snapshot so the UI receives it and doesn't freeze
+                    SystemStateSnapshot errorSnap = new SystemStateSnapshot();
+                    errorSnap.lastStepLog = "[ERROR] " + innerEx.getMessage();
+                    
+                    out.writeObject(new IPCMessage(null, null, errorSnap, null));
+                    out.flush();
+                    
+                    sendLog("[CORE ERROR] " + innerEx.getMessage());
+                }
             }
         } catch (Exception e) {
             System.err.println("[CORE IPC ERROR] UI communication error: " + e.getMessage());

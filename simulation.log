@@ -3406,3 +3406,10 @@
 [2026-11-07 22:55:55] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x00BC | ACC: 0x01 | B: 0x01 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x00BD | ACC: 0x00 | B: 0x01 | SP: 0x07 | DPTR: 0x0000 |   Queue : []
 [2026-11-07 22:55:55] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x00BD | ACC: 0x00 | B: 0x01 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x00BE | ACC: 0x00 | B: 0x01 | SP: 0x07 | DPTR: 0x0000 |   Queue : []
 [2026-11-07 22:55:55] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x00BE | ACC: 0x00 | B: 0x01 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x00BE | ACC: 0x00 | B: 0x01 | SP: 0x07 | DPTR: 0x0000 |   Queue : []
+[2026-11-11 00:19:48] [CORE] Connected to Logging Process.
+[2026-11-11 00:20:13] [CORE] Program loaded into CPU Program Memory.
+[2026-11-11 00:33:22] [CORE] Connected to Logging Process.
+[2026-11-11 00:33:51] [CORE] Program loaded into CPU Program Memory.
+[2026-11-11 00:33:53] [CORE STEP] EXECUTE ✓ |   Before: PC: 0x0000 | ACC: 0x00 | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   After : PC: 0x0001 | ACC: 0x0A | B: 0x00 | SP: 0x07 | DPTR: 0x0000 |   Queue : []
+[2026-11-11 00:33:55] [CORE ERROR] Unsupported mnemonic: SUB
+[2026-11-11 00:33:56] [CORE ERROR] Unsupported mnemonic: SUB
