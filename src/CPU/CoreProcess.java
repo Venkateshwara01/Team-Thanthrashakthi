@@ -67,7 +67,7 @@ public class CoreProcess {
     private synchronized SystemStateSnapshot handleUICommand(IPCMessage msg) {
         CommandType cmd = msg.getCommand();
         String stepLog = "";
-
+        try{
         if (cmd == CommandType.LOAD_PROGRAM) {
             cpu.loadProgram(msg.getProgramLines());
             stepLog = "Program loaded into memory.";
@@ -97,9 +97,14 @@ public class CoreProcess {
             stepLog = sb.toString();
             sendLog("[CORE RUN] Full execution loop completed.");
         }
-
+        } catch (Exception e) {
+            stepLog = "[ERROR] Assembly/Execution Error: " + e.getMessage();
+            sendLog("[CORE ERROR] " + e.getMessage());
+        }
         return createSnapshot(stepLog);
     }
+
+
 
     private SystemStateSnapshot createSnapshot(String stepLog) {
         SystemStateSnapshot snap = new SystemStateSnapshot();
